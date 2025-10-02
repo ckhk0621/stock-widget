@@ -1,19 +1,98 @@
+import { useState, useEffect } from 'react';
 import StockQuote from './StockQuote';
 import StockChart from './StockChart';
 import HistoricalData from './HistoricalData';
+import { getStockQuote, getStockData, getMockQuote, getMockStockData } from '../services/stockApi';
 import './StockWidget.css';
 
 const StockWidget = ({ symbol = 'MIMI', useMock = false, theme = 'light' }) => {
+  const [quote, setQuote] = useState(null);
+  const [dailyData, setDailyData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchAllData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        // Fetch data based on useMock flag
+        if (useMock) {
+          // Mock data - no API calls
+          const mockQuote = getMockQuote(symbol);
+          const mockDaily = getMockStockData(symbol, '1M');
+
+          setQuote(mockQuote);
+          setDailyData(mockDaily);
+        } else {
+          // Real API - fetch both in parallel to be efficient
+          // But note: with 24-hour cache, this still only makes 2 API calls total
+          // (quote + daily data) instead of 3 separate calls
+          const [quoteData, dailyDataResult] = await Promise.all([
+            getStockQuote(symbol),
+            getStockData(symbol, '1M')
+          ]);
+
+          setQuote(quoteData);
+          setDailyData(dailyDataResult);
+        }
+      } catch (err) {
+        setError(err.message);
+        console.error('[StockWidget] Error fetching data:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAllData();
+  }, [symbol, useMock]);
+
+  if (loading) {
+    return (
+      <div className="stock-widget-container theme-{theme}">
+        <div className="widget-header">
+          <h1>{symbol}</h1>
+        </div>
+        <div className="widget-content">
+          <div className="loading-spinner"></div>
+          <p>Loading widget data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="stock-widget-container theme-{theme}">
+        <div className="widget-header">
+          <h1>{symbol}</h1>
+        </div>
+        <div className="widget-content error">
+          <p>Error loading widget: {error}</p>
+          <p style={{ fontSize: '0.9em', marginTop: '10px' }}>
+            Try using mock mode: add <code>?mock=true</code> to the URL
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Get exchange from quote data (dynamic)
+  const exchange = quote?.exchange && quote.exchange !== 'N/A' ? quote.exchange : '';
+  const headerTitle = exchange ? `${exchange}: ${symbol}` : symbol;
+
   return (
     <div className={`stock-widget-container theme-${theme}`}>
       <div className="widget-header">
-        <h1>NASDAQ: {symbol}</h1>
+        <h1>{headerTitle}</h1>
       </div>
 
       <div className="widget-content">
-        <StockQuote symbol={symbol} useMock={useMock} />
-        <StockChart symbol={symbol} useMock={useMock} />
-        <HistoricalData symbol={symbol} useMock={useMock} />
+        {/* Pass pre-fetched data to child components */}
+        <StockQuote symbol={symbol} quote={quote} loading={false} />
+        <StockChart symbol={symbol} dailyData={dailyData} loading={false} />
+        <HistoricalData symbol={symbol} dailyData={dailyData} loading={false} />
       </div>
 
       {/* <div className="widget-footer">

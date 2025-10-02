@@ -1,36 +1,10 @@
-import { useState, useEffect } from 'react';
-import { getStockQuote, getMockQuote } from '../services/stockApi';
 import './StockQuote.css';
 
-const StockQuote = ({ symbol, useMock = false }) => {
-  const [quote, setQuote] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+const StockQuote = ({ symbol, quote, loading = false }) => {
+  // Component now receives pre-fetched data from parent (StockWidget)
+  // This eliminates redundant API calls
 
-  useEffect(() => {
-    const fetchQuote = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-
-        const data = useMock
-          ? getMockQuote(symbol)
-          : await getStockQuote(symbol);
-
-        setQuote(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchQuote();
-
-    // Refresh every 60 seconds
-    const interval = setInterval(fetchQuote, 60000);
-    return () => clearInterval(interval);
-  }, [symbol, useMock]);
+  const error = !quote && !loading ? 'No quote data available' : null;
 
   if (loading) {
     return (
@@ -54,6 +28,13 @@ const StockQuote = ({ symbol, useMock = false }) => {
   const isPositive = quote.change >= 0;
   const priceChangeClass = isPositive ? 'positive' : 'negative';
 
+  const formatValue = (value, prefix = '', suffix = '') => {
+    if (value === null || value === undefined || value === 'N/A' || value === '-') {
+      return value || 'N/A';
+    }
+    return `${prefix}${typeof value === 'number' ? value.toFixed(2) : value}${suffix}`;
+  };
+
   return (
     <div className="stock-quote">
       <div className="quote-header">
@@ -69,7 +50,7 @@ const StockQuote = ({ symbol, useMock = false }) => {
           <div className={`price-change ${priceChangeClass}`}>
             <span className="change-arrow">{isPositive ? '▲' : '▼'}</span>
             <span className="change-value">
-              {isPositive ? '+' : ''}{quote.change.toFixed(2)}
+              {isPositive ? '+' : ''}${quote.change.toFixed(2)}
             </span>
             <span className="change-percent">
               ({quote.changePercent})
@@ -77,7 +58,18 @@ const StockQuote = ({ symbol, useMock = false }) => {
           </div>
         </div>
 
-        <div className="quote-details">
+        <div className="quote-details-grid">
+          {/* Column 1: Last, Change, Open, High */}
+          <div className="detail-item">
+            <span className="detail-label">Last</span>
+            <span className="detail-value">${quote.price.toFixed(2)}</span>
+          </div>
+          <div className="detail-item">
+            <span className="detail-label">$Chg</span>
+            <span className={`detail-value ${priceChangeClass}`}>
+              {isPositive ? '▲' : '▼'} ${Math.abs(quote.change).toFixed(2)}
+            </span>
+          </div>
           <div className="detail-item">
             <span className="detail-label">Open</span>
             <span className="detail-value">${quote.open.toFixed(2)}</span>
@@ -86,17 +78,79 @@ const StockQuote = ({ symbol, useMock = false }) => {
             <span className="detail-label">High</span>
             <span className="detail-value">${quote.high.toFixed(2)}</span>
           </div>
+
+          {/* Column 2: Volume, % Chg, Prev. Close, Low */}
+          <div className="detail-item">
+            <span className="detail-label">Volume</span>
+            <span className="detail-value">
+              {typeof quote.volume === 'number' ? quote.volume.toLocaleString() : quote.volume}
+            </span>
+          </div>
+          <div className="detail-item">
+            <span className="detail-label">% Chg</span>
+            <span className={`detail-value ${priceChangeClass}`}>{quote.changePercent}</span>
+          </div>
+          <div className="detail-item">
+            <span className="detail-label">Prev. Close</span>
+            <span className="detail-value">${quote.previousClose.toFixed(2)}</span>
+          </div>
           <div className="detail-item">
             <span className="detail-label">Low</span>
             <span className="detail-value">${quote.low.toFixed(2)}</span>
           </div>
+
+          {/* Column 3: MarketCap, Bid, Bid Size, Year High */}
           <div className="detail-item">
-            <span className="detail-label">Prev Close</span>
-            <span className="detail-value">${quote.previousClose.toFixed(2)}</span>
+            <span className="detail-label">MarketCap</span>
+            <span className="detail-value">{formatValue(quote.marketCap, '$')}</span>
           </div>
           <div className="detail-item">
-            <span className="detail-label">Volume</span>
-            <span className="detail-value">{quote.volume.toLocaleString()}</span>
+            <span className="detail-label">Bid</span>
+            <span className="detail-value">{formatValue(quote.bid, '$')}</span>
+          </div>
+          <div className="detail-item">
+            <span className="detail-label">Bid Size</span>
+            <span className="detail-value">{formatValue(quote.bidSize)}</span>
+          </div>
+          <div className="detail-item">
+            <span className="detail-label">Year High</span>
+            <span className="detail-value">{formatValue(quote.week52High, '$')}</span>
+          </div>
+
+          {/* Column 4: Shares, Ask, Ask Size, Year Low */}
+          <div className="detail-item">
+            <span className="detail-label">Shares</span>
+            <span className="detail-value">{formatValue(quote.sharesOutstanding)}</span>
+          </div>
+          <div className="detail-item">
+            <span className="detail-label">Ask</span>
+            <span className="detail-value">{formatValue(quote.ask, '$')}</span>
+          </div>
+          <div className="detail-item">
+            <span className="detail-label">Ask Size</span>
+            <span className="detail-value">{formatValue(quote.askSize)}</span>
+          </div>
+          <div className="detail-item">
+            <span className="detail-label">Year Low</span>
+            <span className="detail-value">{formatValue(quote.week52Low, '$')}</span>
+          </div>
+
+          {/* Column 5: PB Ratio, PE Ratio, EPS, Exchange */}
+          <div className="detail-item">
+            <span className="detail-label">PB Ratio</span>
+            <span className="detail-value">{formatValue(quote.pbRatio)}</span>
+          </div>
+          <div className="detail-item">
+            <span className="detail-label">PE Ratio</span>
+            <span className="detail-value">{formatValue(quote.peRatio)}</span>
+          </div>
+          <div className="detail-item">
+            <span className="detail-label">EPS</span>
+            <span className="detail-value">{formatValue(quote.eps)}</span>
+          </div>
+          <div className="detail-item">
+            <span className="detail-label">Exchange</span>
+            <span className="detail-value">{formatValue(quote.exchange)}</span>
           </div>
         </div>
       </div>

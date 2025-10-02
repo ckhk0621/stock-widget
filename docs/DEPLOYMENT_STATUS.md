@@ -40,7 +40,7 @@ Should output: `DOMContentLoaded` (proves new version is live)
 ### Update WordPress (3 Options)
 
 #### Option A: Simple Auto-Create (Easiest)
-Use code from `wpcode-snippet-simple.html`:
+Use code from `../tests/wpcode-snippet-simple.html`:
 ```html
 <script>
   window.stockWidgetConfig = {

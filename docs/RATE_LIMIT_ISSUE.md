@@ -33,7 +33,7 @@ So **8-9 page loads** exhaust your daily quota.
 
 Your WordPress code **already has** `useMock: true` configured! The widget will work with demo data.
 
-**Current wpcode-snippet.html:**
+**Current ../tests/wpcode-snippet.html:**
 ```html
 <script>
   window.stockWidgetConfig = {

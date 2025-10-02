@@ -14,7 +14,7 @@ This guide explains how to embed the Stock Widget into your WordPress website.
 
 **Step 2**: Code Snippets → Add Snippet → Universal Snippet
 
-**Step 3**: Copy the EXACT code from `wpcode-snippet.html` file, or use this:
+**Step 3**: Copy the EXACT code from `../tests/wpcode-snippet.html` file, or use this:
 
 ```html
 <!-- Container MUST be first -->

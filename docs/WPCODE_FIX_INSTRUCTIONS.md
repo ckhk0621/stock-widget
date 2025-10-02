@@ -91,8 +91,8 @@ Container: <div id="stock-widget">...</div>
 
 ## 📁 Reference Files
 
-- **wpcode-snippet-simple.html** - Copy-paste ready (Method 1)
-- **wpcode-snippet.html** - Custom placement (Method 2)
+- **../tests/wpcode-snippet-simple.html** - Copy-paste ready (Method 1)
+- **../tests/wpcode-snippet.html** - Custom placement (Method 2)
 - **WORDPRESS_INTEGRATION.md** - Full integration guide
 
 ---

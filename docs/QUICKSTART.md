@@ -104,7 +104,7 @@ http://localhost:3008?symbol=AAPL&mock=true&theme=dark
 
 ## 🔗 Next Steps
 
-- **Full Documentation**: See [README.md](README.md)
+- **Full Documentation**: See [README.md](../README.md)
 - **Deployment Guide**: See [DEPLOYMENT.md](DEPLOYMENT.md)
 - **WordPress Integration**: See [WORDPRESS_INTEGRATION.md](WORDPRESS_INTEGRATION.md)
 

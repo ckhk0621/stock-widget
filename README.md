@@ -5,6 +5,7 @@ A modern, embeddable stock information widget built with React and Vite, designe
 ## 🌟 Features
 
 - **Real-time Stock Quotes** - Current price, change, volume, and key metrics
+- **Multiple API Providers** - Finnhub (60/min, recommended) or Alpha Vantage (25/day)
 - **Interactive Charts** - Multi-period price and volume charts (10D, 1M, 3M, 6M, 1Y, 5Y, ALL)
 - **Historical Data** - Sortable table with 30-day price history
 - **WordPress Ready** - Easy embed with script tag or shortcode
@@ -21,16 +22,19 @@ A modern, embeddable stock information widget built with React and Vite, designe
 # Install dependencies
 npm install
 
-# Copy environment file
-cp .env.example .env
+# Setup API provider (Finnhub recommended)
+# Get free API key: https://finnhub.io/register
+cp .env.example .env.local
 
-# Add your Alpha Vantage API key to .env
-# VITE_ALPHA_VANTAGE_KEY=your_api_key_here
+# Edit .env.local and add:
+# VITE_STOCK_API_PROVIDER=finnhub
+# VITE_FINNHUB_API_KEY=your_api_key_here
 
-# Start development server
-npm run dev
+# Build and preview (works on any Node version)
+npm run build
+npm run preview
 
-# Open http://localhost:3008
+# Open http://localhost:4173
 ```
 
 ### Build
@@ -56,7 +60,7 @@ vercel
 vercel --prod
 ```
 
-See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed deployment instructions.
+See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for detailed deployment instructions.
 
 ## 📦 WordPress Integration
 
@@ -77,7 +81,7 @@ Add this code to your WordPress page/post (Custom HTML block):
 <link rel="stylesheet" href="https://your-vercel-app.vercel.app/stock-widget.css">
 ```
 
-See [WORDPRESS_INTEGRATION.md](WORDPRESS_INTEGRATION.md) for detailed integration guide.
+See [docs/WORDPRESS_INTEGRATION.md](docs/WORDPRESS_INTEGRATION.md) for detailed integration guide.
 
 ## ⚙️ Configuration
 
@@ -98,25 +102,40 @@ Configure via URL parameters:
 
 Example: `http://localhost:3008?symbol=AAPL&theme=dark`
 
-## 🔑 API Key
+## 🔑 Stock API Setup
 
-### Get Free API Key
+### Finnhub (Recommended - FREE)
 
-1. Visit https://www.alphavantage.co/support/#api-key
-2. Enter your email
-3. Get API key instantly
-4. Add to `.env` file:
+**Best choice for production:**
+- ✅ **60 API calls per minute** (~86,400/day)
+- ✅ **2,400x better** than Alpha Vantage free tier
+- ✅ Free forever with generous limits
+
+**Setup:**
+1. Get free API key: https://finnhub.io/register
+2. Add to `.env.local`:
+   ```bash
+   VITE_STOCK_API_PROVIDER=finnhub
+   VITE_FINNHUB_API_KEY=your_key_here
    ```
-   VITE_ALPHA_VANTAGE_KEY=your_api_key_here
+
+### Alpha Vantage (Legacy)
+
+**Limited free tier:**
+- ❌ Only 25 requests/day, 5 requests/minute
+- Use only if you already have an API key
+
+**Setup:**
+1. Get API key: https://www.alphavantage.co/support/#api-key
+2. Add to `.env.local`:
+   ```bash
+   VITE_STOCK_API_PROVIDER=alphavantage
+   VITE_ALPHA_VANTAGE_KEY=your_key_here
    ```
 
-### API Limitations
+See [docs/API_KEY_SETUP.md](docs/API_KEY_SETUP.md) for detailed setup instructions.
 
-- **Free Tier**: 25 requests/day, 5 requests/minute
-- **Demo Key**: Rate-limited, for testing only
-- **Premium**: Upgrade for higher limits
-
-### Alternative APIs
+### API Provider Comparison
 
 - [Finnhub](https://finnhub.io/) - Free tier with real-time data
 - [IEX Cloud](https://iexcloud.io/) - Professional API
@@ -270,8 +289,8 @@ Contributions welcome! Please:
 
 ## 📚 Documentation
 
-- [Deployment Guide](DEPLOYMENT.md) - Deploy to Vercel
-- [WordPress Integration](WORDPRESS_INTEGRATION.md) - Embed in WordPress
+- [Deployment Guide](docs/DEPLOYMENT.md) - Deploy to Vercel
+- [WordPress Integration](docs/WORDPRESS_INTEGRATION.md) - Embed in WordPress
 - [API Documentation](src/services/stockApi.js) - API service details
 
 ## 🐛 Troubleshooting
@@ -325,4 +344,4 @@ Made with ❤️ for WordPress stock display
 
 **Live Demo**: https://your-vercel-app.vercel.app
 
-**Documentation**: [Full Documentation](WORDPRESS_INTEGRATION.md)
+**Documentation**: [Full Documentation](docs/WORDPRESS_INTEGRATION.md)

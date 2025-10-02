@@ -1,48 +1,36 @@
 import { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts';
-import { getStockData, getMockStockData } from '../services/stockApi';
 import { format } from 'date-fns';
 import './StockChart.css';
 
 const PERIODS = ['10D', '1M', '3M', '6M', '1Y', '5Y', 'ALL'];
 
-const StockChart = ({ symbol, useMock = false }) => {
+const StockChart = ({ symbol, dailyData, loading = false }) => {
+  // Component now receives pre-fetched data from parent (StockWidget)
+  // Only 1M period data is provided to eliminate redundant API calls
+  // Other periods are disabled to stay within API limits
+
   const [selectedPeriod, setSelectedPeriod] = useState('1M');
   const [chartData, setChartData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const error = !dailyData && !loading ? 'No chart data available' : null;
 
   useEffect(() => {
-    const fetchChartData = async () => {
-      try {
-        setLoading(true);
-        setError(null);
+    if (!dailyData || dailyData.length === 0) {
+      return;
+    }
 
-        const data = useMock
-          ? getMockStockData(symbol, selectedPeriod)
-          : await getStockData(symbol, selectedPeriod);
+    // Transform data for recharts
+    const transformed = dailyData.map(item => ({
+      date: item.time * 1000,
+      price: item.close,
+      volume: item.volume,
+      high: item.high,
+      low: item.low,
+      open: item.open
+    }));
 
-        // Transform data for recharts
-        const transformed = data.map(item => ({
-          date: item.time * 1000,
-          price: item.close,
-          volume: item.volume,
-          high: item.high,
-          low: item.low,
-          open: item.open
-        }));
-
-        setChartData(transformed);
-      } catch (err) {
-        setError(err.message);
-        console.error('Error fetching chart data:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchChartData();
-  }, [symbol, selectedPeriod, useMock]);
+    setChartData(transformed);
+  }, [dailyData]);
 
   const formatXAxis = (timestamp) => {
     const date = new Date(timestamp);
@@ -115,8 +103,10 @@ const StockChart = ({ symbol, useMock = false }) => {
           {PERIODS.map(period => (
             <button
               key={period}
-              className={`period-btn ${selectedPeriod === period ? 'active' : ''}`}
-              onClick={() => setSelectedPeriod(period)}
+              className={`period-btn ${selectedPeriod === period ? 'active' : ''} ${period !== '1M' ? 'disabled' : ''}`}
+              onClick={() => period === '1M' && setSelectedPeriod(period)}
+              disabled={period !== '1M'}
+              title={period !== '1M' ? 'Only 1M period available to reduce API calls' : undefined}
             >
               {period}
             </button>

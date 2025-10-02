@@ -1,47 +1,34 @@
 import { useState, useEffect } from 'react';
-import { getStockData, getMockStockData } from '../services/stockApi';
 import { format } from 'date-fns';
 import './HistoricalData.css';
 
-const HistoricalData = ({ symbol, useMock = false }) => {
+const HistoricalData = ({ symbol, dailyData, loading = false }) => {
+  // Component now receives pre-fetched data from parent (StockWidget)
+  // This eliminates redundant API calls
+
   const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [sortConfig, setSortConfig] = useState({ key: 'date', direction: 'desc' });
+  const error = !dailyData && !loading ? 'No historical data available' : null;
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        setError(null);
+    if (!dailyData || dailyData.length === 0) {
+      return;
+    }
 
-        const rawData = useMock
-          ? getMockStockData(symbol, '1M')
-          : await getStockData(symbol, '1M');
+    // Transform data for table
+    const transformed = dailyData.map(item => ({
+      date: new Date(item.time * 1000),
+      open: item.open,
+      high: item.high,
+      low: item.low,
+      close: item.close,
+      volume: item.volume,
+      change: item.close - item.open,
+      changePercent: ((item.close - item.open) / item.open) * 100
+    }));
 
-        // Transform data for table
-        const transformed = rawData.map(item => ({
-          date: new Date(item.time * 1000),
-          open: item.open,
-          high: item.high,
-          low: item.low,
-          close: item.close,
-          volume: item.volume,
-          change: item.close - item.open,
-          changePercent: ((item.close - item.open) / item.open) * 100
-        }));
-
-        setData(transformed);
-      } catch (err) {
-        setError(err.message);
-        console.error('Error fetching historical data:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [symbol, useMock]);
+    setData(transformed);
+  }, [dailyData]);
 
   const handleSort = (key) => {
     let direction = 'asc';
