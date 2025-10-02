@@ -4,6 +4,47 @@ import './index.css'
 import App from './App.jsx'
 import StockWidget from './components/StockWidget.jsx'
 
+// Render widget to container
+function renderWidget(container) {
+  const config = window.stockWidgetConfig || {};
+  const symbol = config.symbol || 'MIMI';
+  const useMock = config.useMock !== undefined ? config.useMock : false;
+  const theme = config.theme || 'light';
+
+  createRoot(container).render(
+    <StrictMode>
+      <StockWidget
+        symbol={symbol}
+        useMock={useMock}
+        theme={theme}
+      />
+    </StrictMode>,
+  );
+}
+
+// Create container in optimal position (before footer if possible)
+function createWidgetContainer() {
+  const widgetElement = document.createElement('div');
+  widgetElement.id = 'stock-widget';
+
+  // Try to insert before footer for better placement
+  const footer = document.querySelector('footer');
+  const mainContent = document.querySelector('main, article, .content, #content');
+
+  if (mainContent) {
+    // Insert at end of main content area (best placement)
+    mainContent.appendChild(widgetElement);
+  } else if (footer) {
+    // Insert before footer (good fallback)
+    footer.parentNode.insertBefore(widgetElement, footer);
+  } else {
+    // Last resort: append to body
+    document.body.appendChild(widgetElement);
+  }
+
+  return widgetElement;
+}
+
 // Initialize widget function
 function initWidget() {
   // Check if running in standalone mode (has #root element)
@@ -16,33 +57,43 @@ function initWidget() {
         <App />
       </StrictMode>,
     );
+    return;
+  }
+
+  // WordPress embed mode: look for #stock-widget element
+  let widgetElement = document.getElementById('stock-widget');
+
+  if (widgetElement) {
+    // Container exists, render widget
+    renderWidget(widgetElement);
   } else {
-    // WordPress embed mode: look for #stock-widget element
-    let widgetElement = document.getElementById('stock-widget');
+    // Container doesn't exist yet - set up observer to wait for it
+    // This handles WordPress shortcode rendering that happens after DOMContentLoaded
+    const observer = new MutationObserver((mutations, obs) => {
+      widgetElement = document.getElementById('stock-widget');
+      if (widgetElement) {
+        // Found the container, render and stop observing
+        renderWidget(widgetElement);
+        obs.disconnect();
+      }
+    });
 
-    // If container doesn't exist, create it and append to body
-    if (!widgetElement) {
-      widgetElement = document.createElement('div');
-      widgetElement.id = 'stock-widget';
-      document.body.appendChild(widgetElement);
-    }
+    // Start observing for the container to appear
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
 
-    // Get config from window.stockWidgetConfig or use defaults
-    const config = window.stockWidgetConfig || {};
-    const symbol = config.symbol || 'MIMI';
-    const useMock = config.useMock !== undefined ? config.useMock : false;
-    const theme = config.theme || 'light';
-
-    // Render StockWidget directly to #stock-widget element
-    createRoot(widgetElement).render(
-      <StrictMode>
-        <StockWidget
-          symbol={symbol}
-          useMock={useMock}
-          theme={theme}
-        />
-      </StrictMode>,
-    );
+    // Timeout after 2 seconds - if container still doesn't exist, create it
+    setTimeout(() => {
+      widgetElement = document.getElementById('stock-widget');
+      if (!widgetElement) {
+        // Container never appeared, create it in optimal position
+        observer.disconnect();
+        widgetElement = createWidgetContainer();
+        renderWidget(widgetElement);
+      }
+    }, 2000);
   }
 }
 
