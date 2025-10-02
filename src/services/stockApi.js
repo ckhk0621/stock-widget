@@ -54,11 +54,13 @@ export const getStockQuote = async (symbol) => {
       });
 
       console.log('[Stock API] Response received:', response.data);
+      console.log('[Stock API] Response keys:', Object.keys(response.data));
+      console.log('[Stock API] Has Global Quote?:', !!response.data['Global Quote']);
 
       const quote = response.data['Global Quote'];
 
       if (!quote || Object.keys(quote).length === 0) {
-        console.error('[Stock API] ❌ No quote data in response. Full response:', response.data);
+        console.error('[Stock API] ❌ No quote data in response. Full response:', JSON.stringify(response.data, null, 2));
 
         // Check for API error messages
         if (response.data['Error Message']) {
@@ -141,6 +143,8 @@ export const getDailyData = async (symbol, outputsize = 'compact') => {
 
   return getCachedData(cacheKey, async () => {
     try {
+      console.log(`[Stock API] Fetching daily data for ${symbol}...`);
+
       const response = await axios.get(ALPHA_VANTAGE_BASE, {
         params: {
           function: 'TIME_SERIES_DAILY',
@@ -150,10 +154,24 @@ export const getDailyData = async (symbol, outputsize = 'compact') => {
         }
       });
 
+      console.log('[Stock API] Daily data response received:', response.data);
+      console.log('[Stock API] Daily response keys:', Object.keys(response.data));
+      console.log('[Stock API] Has Time Series?:', !!response.data['Time Series (Daily)']);
+
       const timeSeries = response.data['Time Series (Daily)'];
 
       if (!timeSeries) {
-        throw new Error('No daily data available');
+        console.error('[Stock API] ❌ No daily data in response. Full response:', JSON.stringify(response.data, null, 2));
+
+        // Check for API error messages
+        if (response.data['Error Message']) {
+          throw new Error(`API Error: ${response.data['Error Message']}`);
+        }
+        if (response.data['Note']) {
+          throw new Error(`API Rate Limit: ${response.data['Note']}`);
+        }
+
+        throw new Error('No daily data available - check symbol or API key');
       }
 
       const data = Object.entries(timeSeries).map(([date, values]) => ({
