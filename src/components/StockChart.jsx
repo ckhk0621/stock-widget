@@ -110,7 +110,7 @@ const StockChart = ({ symbol, useMock = false }) => {
   return (
     <div className="stock-chart">
       <div className="chart-header">
-        <h3>Price Chart</h3>
+        <h2>MINI (STOCK CHART)</h2>
         <div className="period-selector">
           {PERIODS.map(period => (
             <button

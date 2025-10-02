@@ -57,7 +57,7 @@ const StockQuote = ({ symbol, useMock = false }) => {
   return (
     <div className="stock-quote">
       <div className="quote-header">
-        <h2 className="symbol">{quote.symbol}</h2>
+        <h2 className="symbol">{quote.symbol} (STOCK QUOTE)</h2>
         <span className="trading-day">{quote.latestTradingDay}</span>
       </div>
 

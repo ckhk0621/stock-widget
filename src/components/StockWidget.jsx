@@ -7,7 +7,7 @@ const StockWidget = ({ symbol = 'MIMI', useMock = false, theme = 'light' }) => {
   return (
     <div className={`stock-widget-container theme-${theme}`}>
       <div className="widget-header">
-        <h1>NASDAQ-listed company (NASDAQ: {symbol})</h1>
+        <h1>NASDAQ: {symbol}</h1>
       </div>
 
       <div className="widget-content">
