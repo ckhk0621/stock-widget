@@ -90,7 +90,7 @@ const HistoricalData = ({ symbol, useMock = false }) => {
 
   return (
     <div className="historical-data">
-      <h3>MINI (Historical) (Last 30 Days)</h3>
+      <h2 className='symbol'>MINI (Historical) (Last 30 Days)</h2>
 
       <div className="table-container">
         <table>
