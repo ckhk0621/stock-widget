@@ -20,12 +20,13 @@ export default defineConfig({
         // Single bundle for easy embedding
         manualChunks: undefined,
 
-        // Consistent naming for easier WordPress integration
-        entryFileNames: 'stock-widget.js',
-        chunkFileNames: 'stock-widget-[name].js',
+        // Add hash for cache-busting (production)
+        // WordPress will need to update script URLs when version changes
+        entryFileNames: 'stock-widget.[hash].js',
+        chunkFileNames: 'stock-widget-[name].[hash].js',
         assetFileNames: (assetInfo) => {
           if (assetInfo.names?.[0]?.endsWith('.css')) {
-            return 'stock-widget.css';
+            return 'stock-widget.[hash].css';
           }
           return 'assets/[name]-[hash][extname]';
         }

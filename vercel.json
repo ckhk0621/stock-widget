@@ -1,7 +1,7 @@
 {
   "headers": [
     {
-      "source": "/stock-widget.js",
+      "source": "/stock-widget.*.js",
       "headers": [
         {
           "key": "Access-Control-Allow-Origin",
@@ -17,12 +17,12 @@
         },
         {
           "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
+          "value": "public, max-age=300"
         }
       ]
     },
     {
-      "source": "/stock-widget.css",
+      "source": "/stock-widget.*.css",
       "headers": [
         {
           "key": "Access-Control-Allow-Origin",
@@ -38,7 +38,7 @@
         },
         {
           "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
+          "value": "public, max-age=300"
         }
       ]
     },
@@ -51,7 +51,7 @@
         },
         {
           "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
+          "value": "public, max-age=300"
         }
       ]
     },
