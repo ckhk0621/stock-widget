@@ -97,23 +97,25 @@ You can also configure the widget using URL parameters:
 
 ## Styling & Customization
 
-### Override Widget Styles
+**Note**: The widget is **full width (100%) by default**. It will automatically span the entire width of its container in WordPress.
 
-Add this CSS to your WordPress theme's Custom CSS:
+### Optional: Limit Width on Large Screens
+
+If you want to limit the widget width on very large screens, add this CSS to your WordPress theme's Custom CSS:
 
 ```css
-/* Make widget full width */
+/* Optional: Limit width and center on large screens */
 .stock-widget-container {
-  max-width: 100% !important;
-  padding: 0 !important;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-/* Customize colors */
+/* Customize brand colors */
 .stock-widget-container .current-price {
   color: #your-brand-color !important;
 }
 
-/* Adjust for mobile */
+/* Adjust padding for mobile */
 @media (max-width: 768px) {
   .stock-widget-container {
     padding: 10px !important;
@@ -258,10 +260,11 @@ For issues or questions:
 
 ## Example Pages
 
-### Simple Stock Page
+### Full-Width Stock Page (Default)
 
 ```html
 <!-- WordPress Custom HTML Block -->
+<!-- Widget automatically spans full width -->
 <div id="stock-widget"></div>
 <script>
   window.stockWidgetConfig = {
@@ -274,11 +277,11 @@ For issues or questions:
 <link rel="stylesheet" href="https://your-vercel-app.vercel.app/stock-widget.css">
 ```
 
-### Investor Relations Page
+### Centered/Limited Width Page (Optional)
 
 ```html
-<!-- Full-width professional stock widget -->
-<div style="max-width: 1400px; margin: 0 auto;">
+<!-- Optional: Wrap in container to limit width -->
+<div style="max-width: 1200px; margin: 0 auto;">
   <h1>Investor Relations</h1>
   <div id="stock-widget"></div>
   <script>
