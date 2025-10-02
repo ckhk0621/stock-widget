@@ -1,0 +1,135 @@
+.stock-quote {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+}
+
+.stock-quote.loading,
+.stock-quote.error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.quote-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.symbol {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+  color: #1a1a1a;
+}
+
+.trading-day {
+  font-size: 14px;
+  color: #666;
+}
+
+.quote-main {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.price-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.current-price {
+  font-size: 36px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.price-change {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.price-change.positive {
+  color: #22c55e;
+}
+
+.price-change.negative {
+  color: #ef4444;
+}
+
+.change-arrow {
+  font-size: 14px;
+}
+
+.quote-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 16px;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.detail-label {
+  font-size: 12px;
+  color: #666;
+  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.detail-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .stock-quote {
+    padding: 16px;
+  }
+
+  .current-price {
+    font-size: 28px;
+  }
+
+  .price-change {
+    font-size: 16px;
+  }
+
+  .quote-details {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
