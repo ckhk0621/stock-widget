@@ -20,9 +20,6 @@ const StockWidget = ({ symbol = 'MIMI', useMock = false, theme = 'light' }) => {
         <p className="disclaimer">
           Data is delayed. For informational purposes only. Not financial advice.
         </p>
-        <p className="powered-by">
-          Powered by <a href="https://www.alphavantage.co/" target="_blank" rel="noopener noreferrer">Alpha Vantage</a>
-        </p>
       </div>
     </div>
   );
