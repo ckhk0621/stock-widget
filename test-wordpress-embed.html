@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WordPress Embed Test - Stock Widget</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+    }
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+    .test-section {
+      background: white;
+      padding: 20px;
+      margin-bottom: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .test-section h2 {
+      margin-top: 0;
+      color: #555;
+      font-size: 18px;
+    }
+    code {
+      background: #f0f0f0;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+    }
+    .note {
+      background: #e3f2fd;
+      border-left: 4px solid #2196f3;
+      padding: 12px;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Stock Widget - WordPress Embed Test</h1>
+
+    <div class="test-section">
+      <h2>Test 1: Script Embed with Mock Data (Recommended)</h2>
+      <div class="note">
+        This simulates how the widget will appear in WordPress with mock data.
+      </div>
+
+      <!-- WordPress Embed Code Starts Here -->
+      <div id="stock-widget"></div>
+      <script>
+        window.stockWidgetConfig = {
+          symbol: 'MIMI',
+          useMock: true,
+          theme: 'light'
+        };
+      </script>
+      <script type="module" crossorigin src="/stock-widget.js"></script>
+      <link rel="stylesheet" href="/stock-widget.css">
+      <!-- WordPress Embed Code Ends Here -->
+    </div>
+
+    <div class="test-section">
+      <h2>Instructions for WordPress</h2>
+      <p>Copy this exact code into a <strong>Custom HTML</strong> block in WordPress:</p>
+      <pre style="background: #f5f5f5; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>&lt;div id="stock-widget"&gt;&lt;/div&gt;
+&lt;script&gt;
+  window.stockWidgetConfig = {
+    symbol: 'MIMI',
+    useMock: true,
+    theme: 'light'
+  };
+&lt;/script&gt;
+&lt;script type="module" crossorigin src="https://stock-widget-five.vercel.app/stock-widget.js"&gt;&lt;/script&gt;
+&lt;link rel="stylesheet" href="https://stock-widget-five.vercel.app/stock-widget.css"&gt;</code></pre>
+    </div>
+
+    <div class="test-section">
+      <h2>Configuration Options</h2>
+      <ul>
+        <li><code>symbol</code>: Stock ticker (e.g., 'MIMI', 'AAPL', 'GOOGL')</li>
+        <li><code>useMock</code>: Use mock data (true = demo data, false = real API)</li>
+        <li><code>theme</code>: Color scheme ('light' or 'dark')</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!--
+  ✨ SIMPLEST WordPress Integration - Auto-creates container!
+
+  Just copy these 3 lines - NO HTML div needed!
+  The widget will automatically create its own container.
+-->
+
+<!-- Configuration -->
+<script>
+  window.stockWidgetConfig = {
+    symbol: 'MIMI',
+    useMock: true,
+    theme: 'light'
+  };
+</script>
+
+<!-- Widget Script (auto-creates <div id="stock-widget"></div>) -->
+<script type="module" crossorigin src="https://stock-widget-five.vercel.app/stock-widget.js"></script>
+
+<!-- Widget Styles -->
+<link rel="stylesheet" href="https://stock-widget-five.vercel.app/stock-widget.css">
+
+<!--
+  That's it! No <div> needed - widget creates it automatically at end of <body>
+
+  How to use in WordPress:
+  1. Code Snippets → Add Snippet → Universal Snippet
+  2. Paste the 3 tags above
+  3. Set location: "Auto Insert" → "Footer" or "After Post Content"
+  4. Save & activate
+
+  Customize:
+  - symbol: 'MIMI' (or 'AAPL', 'GOOGL', etc.)
+  - useMock: true (demo) or false (real API)
+  - theme: 'light' or 'dark'
+-->

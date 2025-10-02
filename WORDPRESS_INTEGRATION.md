@@ -6,35 +6,145 @@ This guide explains how to embed the Stock Widget into your WordPress website.
 
 ## Quick Start
 
-### Method 1: Direct Embed (Recommended)
+### Method 1: WPCode Plugin (Recommended) ✅ EASIEST
 
-1. **After deploying to Vercel** (see DEPLOYMENT.md), add this code to your WordPress page/post:
+**Why WPCode?** Better control over script loading order and placement.
+
+**Step 1**: Install **WPCode** plugin from WordPress
+
+**Step 2**: Code Snippets → Add Snippet → Universal Snippet
+
+**Step 3**: Copy the EXACT code from `wpcode-snippet.html` file, or use this:
 
 ```html
+<!-- Container MUST be first -->
 <div id="stock-widget"></div>
+
+<!-- Config MUST be before script -->
 <script>
   window.stockWidgetConfig = {
     symbol: 'MIMI',
-    useMock: false,
+    useMock: true,      // ✅ Use true for mock data (recommended)
     theme: 'light'
   };
 </script>
-<script type="module" crossorigin src="https://your-vercel-app.vercel.app/stock-widget.js"></script>
-<link rel="stylesheet" href="https://your-vercel-app.vercel.app/stock-widget.css">
+
+<!-- Load widget script -->
+<script type="module" crossorigin src="https://stock-widget-five.vercel.app/stock-widget.js"></script>
+<link rel="stylesheet" href="https://stock-widget-five.vercel.app/stock-widget.css">
 ```
 
-### Method 2: Custom HTML Block
+**Step 4**: Set Insert Method
+   - Auto Insert: "After Post Content" (for specific pages)
+   - OR: Enable shortcode and use `[wpcode id="YOUR_ID"]`
 
-1. In WordPress editor, add a **Custom HTML** block
-2. Paste the embed code above
-3. Replace `your-vercel-app` with your actual Vercel app URL
-4. Customize the configuration:
-   - `symbol`: Stock symbol (default: 'MIMI')
-   - `useMock`: Use mock data for testing (default: false)
-   - `theme`: 'light' or 'dark' (default: 'light')
-5. Publish/Update your page
+**Step 5**: Customize configuration:
+   - `symbol`: Stock symbol (e.g., 'MIMI', 'AAPL', 'GOOGL')
+   - `useMock`: `true` = Mock data ✅ | `false` = Real API data
+   - `theme`: 'light' or 'dark'
 
-### Method 3: Shortcode (Using Code Snippets Plugin)
+**Step 6**: Save and activate snippet
+
+**✅ The widget will now display correctly!**
+
+---
+
+### Method 2: Custom HTML Block (Alternative)
+
+**Use if you can't install plugins.**
+
+**Step 1**: In WordPress editor, add a **Custom HTML** block
+
+**Step 2**: Paste the same code as Method 1 above
+
+**Step 3**: Click "Preview" or "Publish"
+
+**⚠️ Important**: Some themes may load scripts in wrong order. If widget doesn't show, use Method 1 (WPCode) instead.
+
+### Method 3: iframe Embed (Fallback)
+
+If script embed doesn't work, use iframe:
+
+```html
+<iframe
+  src="https://stock-widget-five.vercel.app/?symbol=MIMI&mock=true&theme=light"
+  width="100%"
+  height="900"
+  frameborder="0"
+  style="border: none;"
+></iframe>
+```
+
+**Note**: Adjust `height` based on your content needs.
+
+---
+
+## Troubleshooting
+
+### Widget Not Showing? Follow This Checklist ✓
+
+**1. Check Browser Console (F12 → Console)**
+   - Look for JavaScript errors
+   - Check if script is loading: `stock-widget.js` should appear in Network tab
+   - Verify config: Type `window.stockWidgetConfig` in console
+
+**2. Verify Element Exists**
+   - Right-click page → Inspect
+   - Search for `<div id="stock-widget"></div>`
+   - Should be present BEFORE `<script>` tags
+
+**3. Check Script Loading Order** ⚠️ MOST COMMON ISSUE
+   ```
+   ✓ Correct Order:
+   1. <div id="stock-widget"></div>
+   2. <script>window.stockWidgetConfig = {...}</script>
+   3. <script src="...stock-widget.js"></script>
+
+   ✗ Wrong Order (will fail):
+   1. <script>window.stockWidgetConfig = {...}</script>
+   2. <script src="...stock-widget.js"></script>
+   3. <div id="stock-widget"></div>  ← Too late!
+   ```
+
+**4. Verify Vercel URL**
+   - Check deployment status: https://vercel.com/dashboard
+   - Test URL directly: https://stock-widget-five.vercel.app/
+   - Ensure URL in code matches Vercel deployment URL
+
+**5. WordPress Theme/Plugin Conflicts**
+   - Disable JavaScript optimization plugins temporarily
+   - Check Content Security Policy (CSP) settings
+   - Try disabling other plugins to find conflicts
+
+**6. Common WPCode Issues**
+   - **Location**: Use "Auto Insert" → "After Post Content" or "Before Post Content"
+   - **Priority**: If multiple snippets, set priority (lower = earlier)
+   - **Shortcode**: If using `[wpcode id="X"]`, ensure snippet is active
+
+### Still Not Working?
+
+**Quick Debug Test**:
+1. Open browser console (F12)
+2. Paste this and press Enter:
+```javascript
+console.log('Container exists:', !!document.getElementById('stock-widget'));
+console.log('Config exists:', !!window.stockWidgetConfig);
+console.log('Config value:', window.stockWidgetConfig);
+```
+
+**Expected Output**:
+```
+Container exists: true
+Config exists: true
+Config value: {symbol: "MIMI", useMock: true, theme: "light"}
+```
+
+**If Container is `false`**: The `<div id="stock-widget"></div>` is missing or loaded after script
+**If Config is `false`**: The config script didn't load or loaded after widget script
+
+---
+
+### Method 4: PHP Shortcode (Advanced)
 
 1. Install **Code Snippets** plugin from WordPress
 2. Create a new snippet with this code:

@@ -1,0 +1,53 @@
+<!--
+  WPCode Snippet for Stock Widget
+  ✅ UPDATED: Fixed React Error #299 - Widget now waits for DOM ready!
+
+  Copy this EXACT code into WPCode
+
+  Steps:
+  1. In WordPress: Code Snippets → Add Snippet
+  2. Choose "Universal Snippet"
+  3. Paste this code
+  4. Set Insert Method: "Auto Insert" → "After Post Content" OR use shortcode
+  5. Save and activate
+
+  IMPORTANT: After deploying new build to Vercel, clear WordPress cache!
+-->
+
+<!-- STEP 1: Container element -->
+<div id="stock-widget"></div>
+
+<!-- STEP 2: Configuration (set before script) -->
+<script>
+  window.stockWidgetConfig = {
+    symbol: 'MIMI',
+    useMock: true,      // ✅ true = demo data, false = real API data
+    theme: 'light'      // 'light' or 'dark'
+  };
+</script>
+
+<!-- STEP 3: Widget script (now waits for DOM ready - fixes error #299) -->
+<script type="module" crossorigin src="https://stock-widget-five.vercel.app/stock-widget.js"></script>
+
+<!-- STEP 4: Widget styles -->
+<link rel="stylesheet" href="https://stock-widget-five.vercel.app/stock-widget.css">
+
+<!--
+  ✅ FIXED: Widget now waits for DOM to be fully loaded before rendering
+
+  What Changed:
+  - Widget script now includes DOMContentLoaded event listener
+  - Fixes React error #299: "Target container is not a DOM element"
+  - Works regardless of script loading order
+
+  Debugging Checklist:
+  ✓ Deploy new build to Vercel (npm run build + push)
+  ✓ Clear WordPress cache after deployment
+  ✓ Check browser console for errors (F12 → Console)
+  ✓ Should see NO React error #299
+
+  Common Issues:
+  - Still seeing error #299? Old version cached - clear Vercel cache and WordPress cache
+  - Widget not showing? Check browser console for errors
+  - Blank space? Verify Vercel URL is correct and deployment succeeded
+-->
