@@ -1,0 +1,76 @@
+<!--
+  STOCK WIDGET - WordPress Embed Code (WITH CACHE-BUSTING)
+
+  IMPORTANT: These are HASHED filenames that change with every build!
+
+  Current production URLs (commit df515af):
+  - JS:  https://stock-widget-five.vercel.app/stock-widget.Dxrh2DjT.js
+  - CSS: https://stock-widget-five.vercel.app/stock-widget.DWYXoN-o.css
+
+  When updating widget, you MUST:
+  1. Check Vercel deployment for new hashed filenames
+  2. Update the URLs below with new hash
+  3. Save changes in WPCode
+-->
+
+<!-- Container element (WordPress will inject this via shortcode) -->
+<div id="stock-widget"></div>
+
+<!-- Configuration (set before script loads) -->
+<script>
+  window.stockWidgetConfig = {
+    symbol: 'MIMI',      // Stock symbol to display
+    useMock: true,       // ✅ true = demo data (no API rate limits)
+                         // ❌ false = real Alpha Vantage API (25 calls/day limit)
+    theme: 'light'       // 'light' or 'dark'
+  };
+</script>
+
+<!-- Widget script - HASHED VERSION (cache-busting enabled) -->
+<script
+  type="module"
+  crossorigin
+  src="https://stock-widget-five.vercel.app/stock-widget.Dxrh2DjT.js">
+</script>
+
+<!-- Widget styles - HASHED VERSION (cache-busting enabled) -->
+<link
+  rel="stylesheet"
+  crossorigin
+  href="https://stock-widget-five.vercel.app/stock-widget.DWYXoN-o.css">
+
+<!--
+  NOTES:
+
+  1. HASHED FILENAMES:
+     - Every deployment generates NEW hash
+     - Example: stock-widget.Dxrh2DjT.js (hash: Dxrh2DjT)
+     - Next deploy might be: stock-widget.AbCd1234.js
+
+  2. HOW TO UPDATE:
+     After new Vercel deployment:
+     a) Visit: https://stock-widget-five.vercel.app/
+     b) Open browser DevTools > Network tab
+     c) Refresh page, look for "stock-widget.[hash].js"
+     d) Copy new hash from filename
+     e) Update URLs above with new hash
+
+  3. CACHE BEHAVIOR:
+     - New hash = browser fetches new file automatically
+     - Same hash = cached for 5 minutes (max-age=300)
+     - No manual cache clearing needed!
+
+  4. ALTERNATIVE: Use import maps (future improvement)
+     Create /version.json endpoint:
+     {
+       "js": "stock-widget.Dxrh2DjT.js",
+       "css": "stock-widget.DWYXoN-o.css"
+     }
+     WordPress can fetch this and load dynamically.
+
+  5. MOCK DATA vs REAL API:
+     - useMock: true  → Shows demo data, no API calls
+     - useMock: false → Uses Alpha Vantage API (25 calls/day limit)
+
+     Recommended: Keep useMock: true until you upgrade API plan
+-->
