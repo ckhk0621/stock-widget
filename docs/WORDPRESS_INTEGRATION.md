@@ -17,6 +17,10 @@ This guide explains how to embed the Stock Widget into your WordPress website.
 **Step 3**: Copy the EXACT code from `../tests/wpcode-snippet.html` file, or use this:
 
 ```html
+<!-- Performance optimization: Preconnect to CDN -->
+<link rel="preconnect" href="https://stock-widget-five.vercel.app" crossorigin>
+<link rel="dns-prefetch" href="https://stock-widget-five.vercel.app">
+
 <!-- Container MUST be first -->
 <div id="stock-widget"></div>
 
@@ -55,7 +59,29 @@ This guide explains how to embed the Stock Widget into your WordPress website.
 
 **Step 1**: In WordPress editor, add a **Custom HTML** block
 
-**Step 2**: Paste the same code as Method 1 above
+**Step 2**: Paste the optimized code (including preconnect hints):
+
+```html
+<!-- Performance optimization: Preconnect to CDN -->
+<link rel="preconnect" href="https://stock-widget-five.vercel.app" crossorigin>
+<link rel="dns-prefetch" href="https://stock-widget-five.vercel.app">
+
+<!-- Container MUST be first -->
+<div id="stock-widget"></div>
+
+<!-- Config MUST be before script -->
+<script>
+  window.stockWidgetConfig = {
+    symbol: 'MIMI',
+    useMock: true,
+    theme: 'light'
+  };
+</script>
+
+<!-- Load widget script -->
+<script type="module" crossorigin src="https://stock-widget-five.vercel.app/stock-widget.js"></script>
+<link rel="stylesheet" href="https://stock-widget-five.vercel.app/stock-widget.css">
+```
 
 **Step 3**: Click "Preview" or "Publish"
 

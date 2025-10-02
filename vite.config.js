@@ -14,16 +14,29 @@ export default defineConfig({
     // Asset handling
     assetsDir: 'assets',
 
-    // Optimize for embedding
+    // Optimize for embedding with code splitting
     rollupOptions: {
       output: {
-        // Single bundle for easy embedding
-        manualChunks: undefined,
+        // Split vendor chunks for better caching
+        manualChunks: (id) => {
+          // React core in separate chunk (rarely changes)
+          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) {
+            return 'vendor-react';
+          }
+          // Chart library in separate chunk (large, rarely changes)
+          if (id.includes('node_modules/recharts') || id.includes('node_modules/lightweight-charts')) {
+            return 'vendor-charts';
+          }
+          // Other dependencies
+          if (id.includes('node_modules')) {
+            return 'vendor';
+          }
+        },
 
         // Add hash for cache-busting (production)
         // WordPress will need to update script URLs when version changes
         entryFileNames: 'stock-widget.[hash].js',
-        chunkFileNames: 'stock-widget-[name].[hash].js',
+        chunkFileNames: '[name].[hash].js',
         assetFileNames: (assetInfo) => {
           if (assetInfo.names?.[0]?.endsWith('.css')) {
             return 'stock-widget.[hash].css';

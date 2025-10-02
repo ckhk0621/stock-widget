@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import StockQuote from './StockQuote';
-import StockChart from './StockChart';
 import HistoricalData from './HistoricalData';
 import { getStockQuote, getStockData, getMockQuote, getMockStockData } from '../services/stockApi';
 import './StockWidget.css';
+
+// Lazy load the chart component (reduces initial bundle size)
+const StockChart = lazy(() => import('./StockChart'));
 
 const StockWidget = ({ symbol = 'MIMI', useMock = false, theme = 'light' }) => {
   const [quote, setQuote] = useState(null);
@@ -91,7 +93,17 @@ const StockWidget = ({ symbol = 'MIMI', useMock = false, theme = 'light' }) => {
       <div className="widget-content">
         {/* Pass pre-fetched data to child components */}
         <StockQuote symbol={symbol} quote={quote} loading={false} />
-        <StockChart symbol={symbol} dailyData={dailyData} loading={false} />
+
+        {/* Lazy load chart component with suspense fallback */}
+        <Suspense fallback={
+          <div className="stock-chart loading">
+            <div className="loading-spinner"></div>
+            <p>Loading chart...</p>
+          </div>
+        }>
+          <StockChart symbol={symbol} dailyData={dailyData} loading={false} />
+        </Suspense>
+
         <HistoricalData symbol={symbol} dailyData={dailyData} loading={false} />
       </div>
 
