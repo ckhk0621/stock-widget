@@ -16,11 +16,11 @@ const StockWidget = ({ symbol = 'MIMI', useMock = false, theme = 'light' }) => {
         <HistoricalData symbol={symbol} useMock={useMock} />
       </div>
 
-      <div className="widget-footer">
+      {/* <div className="widget-footer">
         <p className="disclaimer">
           Data is delayed. For informational purposes only. Not financial advice.
         </p>
-      </div>
+      </div> */}
     </div>
   );
 };
