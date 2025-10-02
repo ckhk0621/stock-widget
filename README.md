@@ -131,7 +131,16 @@ Example: `http://localhost:3008?symbol=AAPL&theme=dark`
    ```bash
    VITE_STOCK_API_PROVIDER=alphavantage
    VITE_ALPHA_VANTAGE_KEY=your_key_here
+   # Optional: Enable comprehensive data (Market Cap, PE, PB, EPS, etc.)
+   # Reduces daily capacity from 12 to 8 page loads
+   VITE_ENABLE_OVERVIEW=false
    ```
+
+**API Optimization:**
+- **OVERVIEW disabled** (default): 2 API calls/page = **12 page loads/day**
+- **OVERVIEW enabled**: 3 API calls/page = **8 page loads/day**
+- Fields requiring OVERVIEW: Market Cap, PE Ratio, PB Ratio, EPS, 52-week High/Low, Exchange
+- Basic fields always available: Price, Change, Volume, Open, High, Low
 
 See [docs/API_KEY_SETUP.md](docs/API_KEY_SETUP.md) for detailed setup instructions.
 

@@ -104,12 +104,19 @@ const getQuote = async (symbol) => {
     throw new Error('No quote data available - check symbol or API key');
   }
 
-  // Try to get overview data (this is an additional API call)
+  // Check if OVERVIEW API call is enabled (additional API call)
+  const enableOverview = import.meta.env.VITE_ENABLE_OVERVIEW === 'true';
   let overview = null;
-  try {
-    overview = await getOverview(symbol);
-  } catch (error) {
-    console.warn('[Alpha Vantage] Could not fetch overview data:', error.message);
+
+  if (enableOverview) {
+    console.log('[Alpha Vantage] OVERVIEW enabled - fetching comprehensive data (extra API call)');
+    try {
+      overview = await getOverview(symbol);
+    } catch (error) {
+      console.warn('[Alpha Vantage] Could not fetch overview data:', error.message);
+    }
+  } else {
+    console.log('[Alpha Vantage] OVERVIEW disabled - using basic quote data only (saves 1 API call)');
   }
 
   return {
