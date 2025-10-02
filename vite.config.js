@@ -39,16 +39,16 @@ export default defineConfig({
   // Base path for assets (change when deploying to subdirectory)
   base: './',
 
-  // Server configuration for development
+  // Server configuration for development (http://localhost:3008)
   server: {
-    port: 3000,
+    port: 3008,
     open: true,
     cors: true
   },
 
-  // Preview server configuration
+  // Preview server configuration (http://localhost:3008)
   preview: {
-    port: 3000,
+    port: 3008,
     cors: true
   }
 })

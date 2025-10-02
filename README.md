@@ -30,7 +30,7 @@ cp .env.example .env
 # Start development server
 npm run dev
 
-# Open http://localhost:3000
+# Open http://localhost:3008
 ```
 
 ### Build
@@ -96,7 +96,7 @@ Configure via URL parameters:
 - `?mock=true` - Use mock data
 - `?theme=dark` - Use dark theme
 
-Example: `http://localhost:3000?symbol=AAPL&theme=dark`
+Example: `http://localhost:3008?symbol=AAPL&theme=dark`
 
 ## 🔑 API Key
 
@@ -220,10 +220,10 @@ Or via URL: `?mock=true`
 ```bash
 # Start dev server with mock data
 npm run dev
-# Visit: http://localhost:3000?mock=true
+# Visit: http://localhost:3008?mock=true
 
 # Test different symbols
-# http://localhost:3000?symbol=AAPL&mock=true
+# http://localhost:3008?symbol=AAPL&mock=true
 ```
 
 ## 🚀 Performance

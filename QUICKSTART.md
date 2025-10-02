@@ -24,8 +24,8 @@ cp .env.example .env
 # Start development server with mock data
 npm run dev
 
-# Server will open at http://localhost:3000
-# Test with: http://localhost:3000?mock=true
+# Server will open at http://localhost:3008
+# Test with: http://localhost:3008?mock=true
 ```
 
 ### Step 3: Test Build (1 min)
@@ -77,20 +77,20 @@ Replace `YOUR-APP` with your actual Vercel app name.
 
 ```bash
 # URL parameter
-http://localhost:3000?mock=true
+http://localhost:3008?mock=true
 
 # Different symbols
-http://localhost:3000?symbol=AAPL&mock=true
+http://localhost:3008?symbol=AAPL&mock=true
 
 # Dark theme
-http://localhost:3000?symbol=AAPL&mock=true&theme=dark
+http://localhost:3008?symbol=AAPL&mock=true&theme=dark
 ```
 
 ### Test with Real Data (Requires API Key)
 
 1. Get free API key: https://www.alphavantage.co/support/#api-key
 2. Add to `.env`: `VITE_ALPHA_VANTAGE_KEY=your_key_here`
-3. Visit: http://localhost:3000?symbol=AAPL
+3. Visit: http://localhost:3008?symbol=AAPL
 
 ## 📋 Configuration Checklist
 
