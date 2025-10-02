@@ -2,7 +2,7 @@
   max-width: 1350px;
   width: 100%;
   margin: 0 auto;
-  padding: 20px;
+  padding: 40px 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
@@ -95,9 +95,15 @@
 }
 
 /* Responsive */
+@media (max-width: 1024px) {
+  .stock-widget-container {
+    padding: 40px 20px;
+  }
+}
+
 @media (max-width: 768px) {
   .stock-widget-container {
-    padding: 16px;
+    padding: 40px 20px;
   }
 
   .widget-header h1 {
