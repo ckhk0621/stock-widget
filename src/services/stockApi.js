@@ -8,6 +8,17 @@ const ALPHA_VANTAGE_BASE = 'https://www.alphavantage.co/query';
 const CACHE_DURATION = 3600000; // 1 hour (60 minutes * 60 seconds * 1000 ms)
 const cache = new Map();
 
+// Log API key status on initialization (masked for security)
+const maskApiKey = (key) => {
+  if (!key || key === 'demo') return 'demo';
+  return `${key.substring(0, 4)}...${key.substring(key.length - 4)}`;
+};
+
+console.log(`[Stock API] Using API key: ${maskApiKey(ALPHA_VANTAGE_KEY)}`);
+if (ALPHA_VANTAGE_KEY === 'demo') {
+  console.warn('[Stock API] ⚠️  Using demo API key - rate limited! Create .env.local with your API key');
+}
+
 /**
  * Get cached data or fetch new data
  */
@@ -32,6 +43,8 @@ export const getStockQuote = async (symbol) => {
 
   return getCachedData(cacheKey, async () => {
     try {
+      console.log(`[Stock API] Fetching quote for ${symbol}...`);
+
       const response = await axios.get(ALPHA_VANTAGE_BASE, {
         params: {
           function: 'GLOBAL_QUOTE',
@@ -40,11 +53,25 @@ export const getStockQuote = async (symbol) => {
         }
       });
 
+      console.log('[Stock API] Response received:', response.data);
+
       const quote = response.data['Global Quote'];
 
       if (!quote || Object.keys(quote).length === 0) {
-        throw new Error('No quote data available');
+        console.error('[Stock API] ❌ No quote data in response. Full response:', response.data);
+
+        // Check for API error messages
+        if (response.data['Error Message']) {
+          throw new Error(`API Error: ${response.data['Error Message']}`);
+        }
+        if (response.data['Note']) {
+          throw new Error(`API Rate Limit: ${response.data['Note']}`);
+        }
+
+        throw new Error('No quote data available - check symbol or API key');
       }
+
+      console.log(`[Stock API] ✅ Successfully fetched quote for ${symbol}`);
 
       return {
         symbol: quote['01. symbol'],
@@ -59,7 +86,7 @@ export const getStockQuote = async (symbol) => {
         low: parseFloat(quote['04. low'])
       };
     } catch (error) {
-      console.error('Error fetching stock quote:', error);
+      console.error('[Stock API] ❌ Error fetching stock quote:', error.message);
       throw error;
     }
   });
