@@ -1,7 +1,7 @@
 {
   "headers": [
     {
-      "source": "/stock-widget.*.js",
+      "source": "/stock-widget.(.*).js",
       "headers": [
         {
           "key": "Access-Control-Allow-Origin",
@@ -22,7 +22,7 @@
       ]
     },
     {
-      "source": "/stock-widget.*.css",
+      "source": "/stock-widget.(.*).css",
       "headers": [
         {
           "key": "Access-Control-Allow-Origin",
