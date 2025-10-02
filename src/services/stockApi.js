@@ -5,7 +5,7 @@ const ALPHA_VANTAGE_KEY = import.meta.env.VITE_ALPHA_VANTAGE_KEY || 'demo';
 const ALPHA_VANTAGE_BASE = 'https://www.alphavantage.co/query';
 
 // Cache configuration
-const CACHE_DURATION = 60000; // 1 minute
+const CACHE_DURATION = 3600000; // 1 hour (60 minutes * 60 seconds * 1000 ms)
 const cache = new Map();
 
 /**
