@@ -6,7 +6,7 @@ import './StockChart.css';
 
 const PERIODS = ['10D', '1M', '3M', '6M', '1Y', '5Y', 'ALL'];
 
-const StockChart = ({ symbol, dailyData, loading = false }) => {
+const StockChart = ({ dailyData, loading = false }) => {
   // Component now receives pre-fetched data from parent (StockWidget)
   // Only 1M period data is provided to eliminate redundant API calls
   // Other periods are disabled to stay within API limits

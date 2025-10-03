@@ -33,15 +33,15 @@ export default defineConfig({
           }
         },
 
-        // Add hash for cache-busting (production)
-        // WordPress will need to update script URLs when version changes
-        entryFileNames: 'stock-widget.[hash].js',
-        chunkFileNames: '[name].[hash].js',
+        // Use consistent filenames for WordPress embedding
+        // Cache busting via query parameters (e.g., ?v=6)
+        entryFileNames: 'stock-widget.js',
+        chunkFileNames: '[name].js',
         assetFileNames: (assetInfo) => {
           if (assetInfo.names?.[0]?.endsWith('.css')) {
-            return 'stock-widget.[hash].css';
+            return 'stock-widget.css';
           }
-          return 'assets/[name]-[hash][extname]';
+          return 'assets/[name][extname]';
         }
       }
     },

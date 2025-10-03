@@ -1,6 +1,6 @@
 import './StockQuote.css';
 
-const StockQuote = ({ symbol, quote, loading = false }) => {
+const StockQuote = ({ quote, loading = false }) => {
   // Component now receives pre-fetched data from parent (StockWidget)
   // This eliminates redundant API calls
 
