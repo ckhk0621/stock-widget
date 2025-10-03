@@ -18,23 +18,62 @@ const PROVIDER = import.meta.env.VITE_STOCK_API_PROVIDER || 'finnhub';
 // - 25 calls/day ÷ 3 = ~8 unique page loads per day
 // - Subsequent visitors within 24h use cached data (0 API calls)
 const CACHE_DURATION = 86400000; // 24 hours
-const cache = new Map();
+const CACHE_PREFIX = 'stock_widget_cache_';
+
+/**
+ * Get data from localStorage cache
+ */
+const getFromCache = (key) => {
+  try {
+    const item = localStorage.getItem(CACHE_PREFIX + key);
+    if (!item) return null;
+
+    const { data, timestamp } = JSON.parse(item);
+    const now = Date.now();
+
+    if ((now - timestamp) < CACHE_DURATION) {
+      return data;
+    }
+
+    // Cache expired, remove it
+    localStorage.removeItem(CACHE_PREFIX + key);
+    return null;
+  } catch (error) {
+    console.warn('[API Adapter] Cache read error:', error);
+    return null;
+  }
+};
+
+/**
+ * Save data to localStorage cache
+ */
+const saveToCache = (key, data) => {
+  try {
+    const item = {
+      data,
+      timestamp: Date.now()
+    };
+    localStorage.setItem(CACHE_PREFIX + key, JSON.stringify(item));
+  } catch (error) {
+    console.warn('[API Adapter] Cache write error:', error);
+    // Quota exceeded or localStorage disabled - continue without caching
+  }
+};
 
 /**
  * Get cached data or fetch new data
  */
 const getCachedData = async (key, fetchFn) => {
-  const cached = cache.get(key);
-  const now = Date.now();
+  const cached = getFromCache(key);
 
-  if (cached && (now - cached.timestamp) < CACHE_DURATION) {
+  if (cached) {
     console.log(`[API Adapter] Cache hit for ${key}`);
-    return cached.data;
+    return cached;
   }
 
   console.log(`[API Adapter] Cache miss for ${key}, fetching...`);
   const data = await fetchFn();
-  cache.set(key, { data, timestamp: now });
+  saveToCache(key, data);
   return data;
 };
 

@@ -19,11 +19,8 @@ const StockWidget = ({ symbol = 'MIMI', useMock = false, theme = 'light' }) => {
         setLoading(true);
         setError(null);
 
-        console.log('[StockWidget] useMock prop:', useMock, typeof useMock);
-
         // Fetch data based on useMock flag
         if (useMock) {
-          console.log('[StockWidget] Using MOCK data');
           // Mock data - no API calls
           const mockQuote = getMockQuote(symbol);
           const mockDaily = getMockStockData(symbol, '1M');
@@ -31,7 +28,6 @@ const StockWidget = ({ symbol = 'MIMI', useMock = false, theme = 'light' }) => {
           setQuote(mockQuote);
           setDailyData(mockDaily);
         } else {
-          console.log('[StockWidget] Using REAL API data');
           // Real API - fetch both in parallel to be efficient
           // But note: with 24-hour cache, this still only makes 2 API calls total
           // (quote + daily data) instead of 3 separate calls
