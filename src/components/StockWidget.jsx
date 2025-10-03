@@ -54,7 +54,7 @@ const StockWidget = ({ symbol = 'MIMI', useMock = false, theme = 'light' }) => {
     return (
       <div className="stock-widget-container theme-{theme}">
         <div className="widget-header">
-          <h1>{symbol}</h1>
+          <h1>NASDAQ: {symbol}</h1>
         </div>
         <div className="widget-content">
           <div className="loading-spinner"></div>
@@ -68,7 +68,7 @@ const StockWidget = ({ symbol = 'MIMI', useMock = false, theme = 'light' }) => {
     return (
       <div className="stock-widget-container theme-{theme}">
         <div className="widget-header">
-          <h1>{symbol}</h1>
+          <h1>NASDAQ:{symbol}</h1>
         </div>
         <div className="widget-content error">
           <p>Error loading widget: {error}</p>
@@ -82,7 +82,7 @@ const StockWidget = ({ symbol = 'MIMI', useMock = false, theme = 'light' }) => {
 
   // Get exchange from quote data (dynamic)
   const exchange = quote?.exchange && quote.exchange !== 'N/A' ? quote.exchange : '';
-  const headerTitle = exchange ? `${exchange}: ${symbol}` : symbol;
+  const headerTitle = exchange ? `${exchange}: ${symbol}` : `NASDAQ: ${symbol}`;
 
   return (
     <div className={`stock-widget-container theme-${theme}`}>
