@@ -28,6 +28,40 @@ const StockQuote = ({ quote, loading = false }) => {
   const isPositive = quote.change >= 0;
   const priceChangeClass = isPositive ? 'positive' : 'negative';
 
+  // Format large numbers with commas (e.g., 16,012,500)
+  const formatNumber = (value) => {
+    if (value === null || value === undefined || value === 'N/A' || value === '-' || value === '0') {
+      return value || 'N/A';
+    }
+
+    const num = typeof value === 'string' ? parseFloat(value) : value;
+    if (isNaN(num)) return value;
+
+    return num.toLocaleString('en-US', { maximumFractionDigits: 0 });
+  };
+
+  // Format market cap in M/B notation (e.g., $164.65M)
+  const formatMarketCap = (value) => {
+    if (value === null || value === undefined || value === 'N/A' || value === '-') {
+      return value || 'N/A';
+    }
+
+    const num = typeof value === 'string' ? parseFloat(value) : value;
+    if (isNaN(num)) return value;
+
+    if (num >= 1e12) {
+      return `$${(num / 1e12).toFixed(2)}T`;
+    } else if (num >= 1e9) {
+      return `$${(num / 1e9).toFixed(2)}B`;
+    } else if (num >= 1e6) {
+      return `$${(num / 1e6).toFixed(2)}M`;
+    } else if (num >= 1e3) {
+      return `$${(num / 1e3).toFixed(2)}K`;
+    }
+    return `$${num.toFixed(2)}`;
+  };
+
+  // Format regular values with optional prefix/suffix
   const formatValue = (value, prefix = '', suffix = '') => {
     if (value === null || value === undefined || value === 'N/A' || value === '-') {
       return value || 'N/A';
@@ -102,7 +136,7 @@ const StockQuote = ({ quote, loading = false }) => {
           {/* Column 3: MarketCap, Bid, Bid Size, Year High */}
           <div className="detail-item">
             <span className="detail-label">MarketCap</span>
-            <span className="detail-value">{formatValue(quote.marketCap, '$')}</span>
+            <span className="detail-value">{formatMarketCap(quote.marketCap)}</span>
           </div>
           <div className="detail-item">
             <span className="detail-label">Bid</span>
@@ -120,7 +154,7 @@ const StockQuote = ({ quote, loading = false }) => {
           {/* Column 4: Shares, Ask, Ask Size, Year Low */}
           <div className="detail-item">
             <span className="detail-label">Shares</span>
-            <span className="detail-value">{formatValue(quote.sharesOutstanding)}</span>
+            <span className="detail-value">{formatNumber(quote.sharesOutstanding)}</span>
           </div>
           <div className="detail-item">
             <span className="detail-label">Ask</span>
