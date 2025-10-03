@@ -42,12 +42,18 @@ export default defineConfig({
             return 'stock-widget.css';
           }
           return 'assets/[name][extname]';
-        }
+        },
+
+        // Prevent inlining to ensure proper module loading
+        inlineDynamicImports: false
       }
     },
 
     // Minify for production (using esbuild for faster builds)
-    minify: 'esbuild'
+    minify: 'esbuild',
+
+    // Increase chunk size warning limit for chart libraries
+    chunkSizeWarningLimit: 1000
   },
 
   // Base path for assets (change when deploying to subdirectory)

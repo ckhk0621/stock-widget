@@ -99,7 +99,7 @@ const StockChart = ({ dailyData, loading = false }) => {
   return (
     <div className="stock-chart">
       <div className="chart-header">
-        <h2 className='symbol'>MIMI (STOCK CHART)</h2>
+        <h2 className='symbol'>{symbol} (STOCK CHART)</h2>
         <div className="period-selector">
           {PERIODS.map(period => (
             <button
