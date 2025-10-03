@@ -256,17 +256,17 @@ export const getMockQuote = (symbol) => {
     open,
     high,
     low,
-    // Additional comprehensive fields - dynamically generated or blank
-    marketCap: 'N/A', // Not available in mock mode
+    // OVERVIEW fields - not available in mock mode (require real API)
+    marketCap: 'N/A', // Requires OVERVIEW API
     peRatio,
     pbRatio,
     eps,
-    sharesOutstanding: '0', // Not available in mock mode
+    sharesOutstanding: '0', // Requires OVERVIEW API
     week52High: yearHigh,
     week52Low: yearLow,
-    exchange: 'N/A', // Exchange not available in mock mode
-    bid: 'N/A', // Real-time bid not available in mock
-    ask: 'N/A', // Real-time ask not available in mock
+    exchange: 'N/A', // Requires OVERVIEW API
+    bid: 'N/A', // Not available in Alpha Vantage (any tier)
+    ask: 'N/A', // Not available in Alpha Vantage (any tier)
     bidSize: 'N/A',
     askSize: 'N/A'
   };

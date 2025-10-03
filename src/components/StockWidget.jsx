@@ -10,45 +10,61 @@ const StockChart = lazy(() => import('./StockChart'));
 const StockWidget = ({ symbol = 'MIMI', useMock = false, theme = 'light' }) => {
   const [quote, setQuote] = useState(null);
   const [dailyData, setDailyData] = useState(null);
+  const [selectedPeriod, setSelectedPeriod] = useState('1M');
   const [loading, setLoading] = useState(true);
+  const [chartLoading, setChartLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // Fetch quote data on initial load
   useEffect(() => {
-    const fetchAllData = async () => {
+    const fetchQuote = async () => {
       try {
         setLoading(true);
         setError(null);
 
-        // Fetch data based on useMock flag
         if (useMock) {
-          // Mock data - no API calls
           const mockQuote = getMockQuote(symbol);
-          const mockDaily = getMockStockData(symbol, '1M');
-
           setQuote(mockQuote);
-          setDailyData(mockDaily);
         } else {
-          // Real API - fetch both in parallel to be efficient
-          // But note: with 24-hour cache, this still only makes 2 API calls total
-          // (quote + daily data) instead of 3 separate calls
-          const [quoteData, dailyDataResult] = await Promise.all([
-            getStockQuote(symbol),
-            getStockData(symbol, '1M')
-          ]);
-
+          const quoteData = await getStockQuote(symbol);
           setQuote(quoteData);
-          setDailyData(dailyDataResult);
         }
       } catch (err) {
         setError(err.message);
-        console.error('[StockWidget] Error fetching data:', err);
+        console.error('[StockWidget] Error fetching quote:', err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchAllData();
+    fetchQuote();
   }, [symbol, useMock]);
+
+  // Fetch chart data when period changes
+  useEffect(() => {
+    const fetchChartData = async () => {
+      try {
+        setChartLoading(true);
+
+        if (useMock) {
+          const mockDaily = getMockStockData(symbol, selectedPeriod);
+          setDailyData(mockDaily);
+        } else {
+          const dailyDataResult = await getStockData(symbol, selectedPeriod);
+          setDailyData(dailyDataResult);
+        }
+      } catch (err) {
+        console.error(`[StockWidget] Error fetching ${selectedPeriod} data:`, err);
+      } finally {
+        setChartLoading(false);
+      }
+    };
+
+    // Only fetch if quote is loaded
+    if (quote) {
+      fetchChartData();
+    }
+  }, [symbol, selectedPeriod, useMock, quote]);
 
   if (loading) {
     return (
@@ -101,7 +117,13 @@ const StockWidget = ({ symbol = 'MIMI', useMock = false, theme = 'light' }) => {
             <p>Loading chart...</p>
           </div>
         }>
-          <StockChart symbol={symbol} dailyData={dailyData} loading={false} />
+          <StockChart
+            symbol={symbol}
+            dailyData={dailyData}
+            loading={chartLoading}
+            selectedPeriod={selectedPeriod}
+            onPeriodChange={setSelectedPeriod}
+          />
         </Suspense>
 
         <HistoricalData symbol={symbol} dailyData={dailyData} loading={false} />

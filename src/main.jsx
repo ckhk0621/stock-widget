@@ -7,8 +7,14 @@ import StockWidget from './components/StockWidget.jsx'
 // Render widget to container
 function renderWidget(container) {
   const config = window.stockWidgetConfig || {};
+
+  // Check URL query parameters for mock mode
+  const urlParams = new URLSearchParams(window.location.search);
+  const mockFromUrl = urlParams.get('mock') === 'true';
+
   const symbol = config.symbol || 'MIMI';
-  const useMock = config.useMock !== undefined ? config.useMock : false;
+  // Priority: URL parameter > config object > default (false)
+  const useMock = mockFromUrl || (config.useMock !== undefined ? config.useMock : false);
   const theme = config.theme || 'light';
 
   createRoot(container).render(

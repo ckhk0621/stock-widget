@@ -30,8 +30,7 @@ ChartJS.register(
 
 const PERIODS = ['10D', '1M', '3M', '6M', '1Y', '5Y', 'ALL'];
 
-const StockChart = ({ symbol, dailyData, loading = false }) => {
-  const [selectedPeriod, setSelectedPeriod] = useState('1M');
+const StockChart = ({ symbol, dailyData, loading = false, selectedPeriod = '1M', onPeriodChange }) => {
   const [chartData, setChartData] = useState(null);
   const error = !dailyData && !loading ? 'No chart data available' : null;
 
@@ -232,10 +231,8 @@ const StockChart = ({ symbol, dailyData, loading = false }) => {
           {PERIODS.map(period => (
             <button
               key={period}
-              className={`period-btn ${selectedPeriod === period ? 'active' : ''} ${period !== '1M' ? 'disabled' : ''}`}
-              onClick={() => period === '1M' && setSelectedPeriod(period)}
-              disabled={period !== '1M'}
-              title={period !== '1M' ? 'Only 1M period available to reduce API calls' : undefined}
+              className={`period-btn ${selectedPeriod === period ? 'active' : ''}`}
+              onClick={() => onPeriodChange && onPeriodChange(period)}
             >
               {period}
             </button>

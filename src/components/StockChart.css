@@ -47,11 +47,16 @@
   color: #666;
   cursor: pointer;
   transition: all 0.2s ease;
+  outline: none;
 }
 
 .period-btn:hover {
   background: #f3f4f6;
   border-color: #9ca3af;
+}
+
+.period-btn:focus {
+  outline: none;
 }
 
 .period-btn.active {
