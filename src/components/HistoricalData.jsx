@@ -77,7 +77,7 @@ const HistoricalData = ({ dailyData, loading = false }) => {
 
   return (
     <div className="historical-data">
-      <h2 className='symbol'>MIMI (Historical) (Last 30 Days)</h2>
+      <h2 className='symbol'>MIMI (HISTORICAL) (Last 30 Days)</h2>
 
       <div className="table-container">
         <table>
