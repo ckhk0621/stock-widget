@@ -11,6 +11,9 @@ function renderWidget(container) {
   const useMock = config.useMock !== undefined ? config.useMock : false;
   const theme = config.theme || 'light';
 
+  console.log('[Widget Init] Config:', config);
+  console.log('[Widget Init] useMock:', useMock, typeof useMock);
+
   createRoot(container).render(
     <StrictMode>
       <StockWidget

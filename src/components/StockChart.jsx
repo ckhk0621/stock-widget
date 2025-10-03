@@ -1,18 +1,38 @@
-import { useState, useEffect } from 'react';
-// Optimize imports - only import what we use
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { useState, useEffect, useRef } from 'react';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Filler,
+  Legend
+} from 'chart.js';
+import { Line, Bar } from 'react-chartjs-2';
 import { format } from 'date-fns';
 import './StockChart.css';
 
+// Register Chart.js components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Filler,
+  Legend
+);
+
 const PERIODS = ['10D', '1M', '3M', '6M', '1Y', '5Y', 'ALL'];
 
-const StockChart = ({ dailyData, loading = false }) => {
-  // Component now receives pre-fetched data from parent (StockWidget)
-  // Only 1M period data is provided to eliminate redundant API calls
-  // Other periods are disabled to stay within API limits
-
+const StockChart = ({ symbol, dailyData, loading = false }) => {
   const [selectedPeriod, setSelectedPeriod] = useState('1M');
-  const [chartData, setChartData] = useState([]);
+  const [chartData, setChartData] = useState(null);
   const error = !dailyData && !loading ? 'No chart data available' : null;
 
   useEffect(() => {
@@ -20,64 +40,23 @@ const StockChart = ({ dailyData, loading = false }) => {
       return;
     }
 
-    // Transform data for recharts
-    const transformed = dailyData.map(item => ({
-      date: item.time * 1000,
-      price: item.close,
-      volume: item.volume,
-      high: item.high,
-      low: item.low,
-      open: item.open
-    }));
+    // Transform data for Chart.js
+    const labels = dailyData.map(item => format(new Date(item.time * 1000), 'MM/dd'));
+    const prices = dailyData.map(item => item.close);
+    const volumes = dailyData.map(item => item.volume);
 
-    setChartData(transformed);
+    // Determine trend color
+    const isUpTrend = prices[prices.length - 1] > prices[0];
+    const chartColor = isUpTrend ? '#22c55e' : '#ef4444';
+
+    setChartData({
+      labels,
+      prices,
+      volumes,
+      chartColor,
+      rawData: dailyData
+    });
   }, [dailyData]);
-
-  const formatXAxis = (timestamp) => {
-    const date = new Date(timestamp);
-
-    if (selectedPeriod === '10D') {
-      return format(date, 'HH:mm');
-    } else if (selectedPeriod === '1M' || selectedPeriod === '3M') {
-      return format(date, 'MM/dd');
-    } else {
-      return format(date, 'MMM yy');
-    }
-  };
-
-  const formatTooltipDate = (timestamp) => {
-    const date = new Date(timestamp);
-
-    if (selectedPeriod === '10D') {
-      return format(date, 'MMM dd, HH:mm');
-    } else {
-      return format(date, 'MMM dd, yyyy');
-    }
-  };
-
-  const CustomTooltip = ({ active, payload }) => {
-    if (active && payload && payload.length) {
-      const data = payload[0].payload;
-
-      return (
-        <div className="custom-tooltip">
-          <p className="tooltip-date">{formatTooltipDate(data.date)}</p>
-          <p className="tooltip-price">Price: ${data.price.toFixed(2)}</p>
-          <p className="tooltip-volume">Volume: {data.volume.toLocaleString()}</p>
-          {data.high && <p className="tooltip-detail">High: ${data.high.toFixed(2)}</p>}
-          {data.low && <p className="tooltip-detail">Low: ${data.low.toFixed(2)}</p>}
-        </div>
-      );
-    }
-    return null;
-  };
-
-  // Determine if price is trending up or down
-  const isUpTrend = chartData.length > 0
-    ? chartData[chartData.length - 1].price > chartData[0].price
-    : true;
-
-  const chartColor = isUpTrend ? '#22c55e' : '#ef4444';
 
   if (loading) {
     return (
@@ -95,6 +74,155 @@ const StockChart = ({ dailyData, loading = false }) => {
       </div>
     );
   }
+
+  if (!chartData) {
+    return null;
+  }
+
+  const priceChartData = {
+    labels: chartData.labels,
+    datasets: [
+      {
+        label: 'Price',
+        data: chartData.prices,
+        borderColor: chartData.chartColor,
+        backgroundColor: `${chartData.chartColor}33`, // 20% opacity
+        borderWidth: 2,
+        fill: true,
+        tension: 0.4,
+        pointRadius: 0,
+        pointHoverRadius: 5,
+        pointHoverBackgroundColor: chartData.chartColor,
+        pointHoverBorderColor: '#fff',
+        pointHoverBorderWidth: 2
+      }
+    ]
+  };
+
+  const volumeChartData = {
+    labels: chartData.labels,
+    datasets: [
+      {
+        label: 'Volume',
+        data: chartData.volumes,
+        backgroundColor: '#3b82f6aa',
+        borderColor: '#3b82f6',
+        borderWidth: 1
+      }
+    ]
+  };
+
+  const priceChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false
+      },
+      tooltip: {
+        mode: 'index',
+        intersect: false,
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        padding: 12,
+        titleColor: '#fff',
+        bodyColor: '#fff',
+        borderColor: '#666',
+        borderWidth: 1,
+        callbacks: {
+          label: function(context) {
+            const dataIndex = context.dataIndex;
+            const rawItem = chartData.rawData[dataIndex];
+            return [
+              `Price: $${rawItem.close.toFixed(2)}`,
+              `High: $${rawItem.high.toFixed(2)}`,
+              `Low: $${rawItem.low.toFixed(2)}`,
+              `Volume: ${rawItem.volume.toLocaleString()}`
+            ];
+          }
+        }
+      }
+    },
+    scales: {
+      x: {
+        grid: {
+          display: true,
+          color: '#e0e0e0'
+        },
+        ticks: {
+          maxRotation: 0,
+          autoSkipPadding: 20,
+          font: {
+            size: 11
+          }
+        }
+      },
+      y: {
+        grid: {
+          display: true,
+          color: '#e0e0e0'
+        },
+        ticks: {
+          callback: function(value) {
+            return '$' + value.toFixed(0);
+          },
+          font: {
+            size: 11
+          }
+        }
+      }
+    },
+    interaction: {
+      mode: 'nearest',
+      axis: 'x',
+      intersect: false
+    }
+  };
+
+  const volumeChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false
+      },
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            return 'Volume: ' + context.parsed.y.toLocaleString();
+          }
+        }
+      }
+    },
+    scales: {
+      x: {
+        display: true,
+        grid: {
+          display: false
+        },
+        ticks: {
+          maxRotation: 0,
+          autoSkipPadding: 20,
+          font: {
+            size: 10
+          }
+        }
+      },
+      y: {
+        grid: {
+          display: true,
+          color: '#e0e0e0'
+        },
+        ticks: {
+          callback: function(value) {
+            return (value / 1000000).toFixed(1) + 'M';
+          },
+          font: {
+            size: 10
+          }
+        }
+      }
+    }
+  };
 
   return (
     <div className="stock-chart">
@@ -115,74 +243,15 @@ const StockChart = ({ dailyData, loading = false }) => {
         </div>
       </div>
 
-      <div className="chart-container">
-        <ResponsiveContainer width="100%" height={400}>
-          <AreaChart data={chartData}>
-            <defs>
-              <linearGradient id="colorPrice" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor={chartColor} stopOpacity={0.3}/>
-                <stop offset="95%" stopColor={chartColor} stopOpacity={0}/>
-              </linearGradient>
-            </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-            <XAxis
-              dataKey="date"
-              tickFormatter={formatXAxis}
-              stroke="#666"
-              style={{ fontSize: '12px' }}
-            />
-            <YAxis
-              domain={['dataMin - 5', 'dataMax + 5']}
-              stroke="#666"
-              style={{ fontSize: '12px' }}
-              tickFormatter={(value) => `$${value.toFixed(0)}`}
-            />
-            <Tooltip content={<CustomTooltip />} />
-            <Area
-              type="monotone"
-              dataKey="price"
-              stroke={chartColor}
-              strokeWidth={2}
-              fill="url(#colorPrice)"
-            />
-          </AreaChart>
-        </ResponsiveContainer>
+      <div className="chart-container" style={{ height: '400px', marginBottom: '20px' }}>
+        <Line data={priceChartData} options={priceChartOptions} />
       </div>
 
       <div className="volume-chart">
         <h4>Volume</h4>
-        <ResponsiveContainer width="100%" height={100}>
-          <AreaChart data={chartData}>
-            <defs>
-              <linearGradient id="colorVolume" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
-                <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
-              </linearGradient>
-            </defs>
-            <XAxis
-              dataKey="date"
-              tickFormatter={formatXAxis}
-              stroke="#666"
-              style={{ fontSize: '10px' }}
-            />
-            <YAxis
-              stroke="#666"
-              style={{ fontSize: '10px' }}
-              tickFormatter={(value) => `${(value / 1000000).toFixed(1)}M`}
-            />
-            <Tooltip
-              formatter={(value) => value.toLocaleString()}
-              labelFormatter={formatTooltipDate}
-            />
-            <Area
-              type="monotone"
-              dataKey="volume"
-              stroke="#3b82f6"
-              strokeWidth={1}
-              fill="url(#colorVolume)"
-            />
-          </AreaChart>
-        </ResponsiveContainer>
+        <div style={{ height: '100px' }}>
+          <Bar data={volumeChartData} options={volumeChartOptions} />
+        </div>
       </div>
     </div>
   );
