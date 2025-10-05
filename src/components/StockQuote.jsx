@@ -133,36 +133,18 @@ const StockQuote = ({ quote, loading = false }) => {
             <span className="detail-value">${quote.low.toFixed(2)}</span>
           </div>
 
-          {/* Column 3: MarketCap, Bid, Bid Size, Year High */}
+          {/* Column 3: MarketCap, Year High, Shares, Year Low */}
           <div className="detail-item">
             <span className="detail-label">MarketCap</span>
             <span className="detail-value">{formatMarketCap(quote.marketCap)}</span>
           </div>
           <div className="detail-item">
-            <span className="detail-label">Bid</span>
-            <span className="detail-value">{formatValue(quote.bid, '$')}</span>
-          </div>
-          <div className="detail-item">
-            <span className="detail-label">Bid Size</span>
-            <span className="detail-value">{formatValue(quote.bidSize)}</span>
-          </div>
-          <div className="detail-item">
             <span className="detail-label">Year High</span>
             <span className="detail-value">{formatValue(quote.week52High, '$')}</span>
           </div>
-
-          {/* Column 4: Shares, Ask, Ask Size, Year Low */}
           <div className="detail-item">
             <span className="detail-label">Shares</span>
             <span className="detail-value">{formatNumber(quote.sharesOutstanding)}</span>
-          </div>
-          <div className="detail-item">
-            <span className="detail-label">Ask</span>
-            <span className="detail-value">{formatValue(quote.ask, '$')}</span>
-          </div>
-          <div className="detail-item">
-            <span className="detail-label">Ask Size</span>
-            <span className="detail-value">{formatValue(quote.askSize)}</span>
           </div>
           <div className="detail-item">
             <span className="detail-label">Year Low</span>
