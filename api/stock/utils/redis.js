@@ -101,11 +101,23 @@ export const deleteFromCache = async (key) => {
 };
 
 /**
- * Get cache TTL based on environment
- * Development: 12 hours (43200 seconds)
- * Production: 24 hours (86400 seconds)
+ * Get cache TTL optimized for Alpha Vantage free tier
+ *
+ * Alpha Vantage Limits:
+ * - 25 API calls per day
+ * - 5 API calls per minute
+ *
+ * Widget makes 3 API calls per symbol (quote, intraday, daily)
+ *
+ * TTL Strategy (4 hours):
+ * - 6 cache refreshes per day (24h ÷ 4h)
+ * - 18 API calls per day (6 × 3 calls)
+ * - 72% quota utilization
+ * - 7-call safety buffer for errors/retries
+ *
+ * Refresh times: 12AM, 4AM, 8AM, 12PM, 4PM, 8PM
+ * Covers: Pre-market, market open, market close, after-hours
  */
 export const getCacheTTL = () => {
-  const isDev = process.env.NODE_ENV === 'development';
-  return isDev ? 43200 : 86400; // 12h : 24h
+  return 14400; // 4 hours (in seconds)
 };
