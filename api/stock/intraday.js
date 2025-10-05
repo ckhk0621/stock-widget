@@ -13,31 +13,6 @@ import axios from 'axios';
 import { getFromCache, saveToCache, getCacheTTL } from './utils/redis.js';
 
 /**
- * Fetch intraday data from Finnhub API
- */
-const fetchFromFinnhub = async (symbol, interval = '5') => {
-  const apiKey = process.env.VITE_FINNHUB_API_KEY;
-  if (!apiKey) {
-    throw new Error('Finnhub API key not configured');
-  }
-
-  const now = Math.floor(Date.now() / 1000);
-  const from = now - (10 * 24 * 60 * 60); // 10 days ago
-
-  const response = await axios.get('https://finnhub.io/api/v1/stock/candle', {
-    params: {
-      symbol,
-      resolution: interval,
-      from,
-      to: now,
-      token: apiKey
-    }
-  });
-
-  return response.data;
-};
-
-/**
  * Fetch intraday data from Alpha Vantage API
  */
 const fetchFromAlphaVantage = async (symbol, interval = '5min') => {
@@ -84,7 +59,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Symbol parameter required' });
     }
 
-    const provider = process.env.VITE_STOCK_API_PROVIDER || 'finnhub';
+    const provider = 'alphavantage';
     const cacheKey = `stock:intraday:${symbol}:${interval}:${provider}`;
 
     // Try Redis cache first
@@ -101,14 +76,7 @@ export default async function handler(req, res) {
 
     // Cache miss - fetch from API
     console.log(`[API] Fetching intraday data for ${symbol} from ${provider}`);
-    let data;
-
-    if (provider.toLowerCase() === 'finnhub') {
-      const resolution = interval.replace('min', '');
-      data = await fetchFromFinnhub(symbol, resolution);
-    } else {
-      data = await fetchFromAlphaVantage(symbol, interval);
-    }
+    const data = await fetchFromAlphaVantage(symbol, interval);
 
     // Save to Redis cache
     const ttl = getCacheTTL();

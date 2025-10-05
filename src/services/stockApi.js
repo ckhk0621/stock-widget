@@ -5,8 +5,8 @@
  * All functionality is delegated to src/services/apiAdapter.js
  *
  * Supported providers:
- * - Finnhub (default, free tier: 60 calls/min)
- * - Alpha Vantage (legacy, free tier: 25 calls/day)
+ * - Upstash (recommended, server-side Redis caching for 99% API call reduction)
+ * - Alpha Vantage (direct API, free tier: 25 calls/day)
  *
  * Configure provider via VITE_STOCK_API_PROVIDER environment variable
  */

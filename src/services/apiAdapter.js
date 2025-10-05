@@ -6,11 +6,10 @@
  */
 
 import { createAlphaVantageAdapter } from './providers/alphaVantageAdapter.js';
-import { createFinnhubAdapter } from './providers/finnhubAdapter.js';
 import { createUpstashAdapter } from './providers/upstashAdapter.js';
 
 // Get configured provider from environment
-const PROVIDER = import.meta.env.VITE_STOCK_API_PROVIDER || 'finnhub';
+const PROVIDER = import.meta.env.VITE_STOCK_API_PROVIDER || 'alphavantage';
 
 // Cache configuration
 // Development: 12 hours for testing with real data
@@ -66,16 +65,26 @@ const saveToCache = (key, data) => {
 
 /**
  * Get cached data or fetch new data
+ * Note: Upstash/Redis provider handles caching server-side, so we skip localStorage
  */
 const getCachedData = async (key, fetchFn) => {
+  // Skip localStorage caching for Upstash/Redis (server-side caching handles this)
+  const isServerSideCached = ['upstash', 'redis'].includes(PROVIDER.toLowerCase());
+
+  if (isServerSideCached) {
+    console.log(`[API Adapter] Server-side cache (${PROVIDER}) - bypassing localStorage`);
+    return await fetchFn();
+  }
+
+  // Use localStorage cache for direct API providers (alphavantage)
   const cached = getFromCache(key);
 
   if (cached) {
-    console.log(`[API Adapter] Cache hit for ${key}`);
+    console.log(`[API Adapter] Client-side cache hit for ${key}`);
     return cached;
   }
 
-  console.log(`[API Adapter] Cache miss for ${key}, fetching...`);
+  console.log(`[API Adapter] Client-side cache miss for ${key}, fetching...`);
   const data = await fetchFn();
   saveToCache(key, data);
   return data;
@@ -92,17 +101,14 @@ const createProvider = () => {
     case 'alpha-vantage':
       return createAlphaVantageAdapter();
 
-    case 'finnhub':
-      return createFinnhubAdapter();
-
     case 'upstash':
     case 'redis':
       console.log('[API Adapter] Using Upstash Redis (server-side cache)');
       return createUpstashAdapter();
 
     default:
-      console.warn(`[API Adapter] Unknown provider "${PROVIDER}", falling back to Finnhub`);
-      return createFinnhubAdapter();
+      console.warn(`[API Adapter] Unknown provider "${PROVIDER}", falling back to Alpha Vantage`);
+      return createAlphaVantageAdapter();
   }
 };
 

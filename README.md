@@ -5,7 +5,7 @@ A modern, embeddable stock information widget built with React and Vite, designe
 ## 🌟 Features
 
 - **Real-time Stock Quotes** - Current price, change, volume, and key metrics
-- **Multiple API Providers** - Finnhub (60/min, recommended) or Alpha Vantage (25/day)
+- **Server-Side Redis Caching** - Upstash Redis for 99% API call reduction
 - **Interactive Charts** - Multi-period price and volume charts (10D, 1M, 3M, 6M, 1Y, 5Y, ALL)
 - **Historical Data** - Sortable table with 30-day price history
 - **WordPress Ready** - Easy embed with script tag or shortcode
@@ -22,13 +22,14 @@ A modern, embeddable stock information widget built with React and Vite, designe
 # Install dependencies
 npm install
 
-# Setup API provider (Finnhub recommended)
-# Get free API key: https://finnhub.io/register
+# Setup API provider and Redis caching
 cp .env.example .env.local
 
-# Edit .env.local and add:
-# VITE_STOCK_API_PROVIDER=finnhub
-# VITE_FINNHUB_API_KEY=your_api_key_here
+# Edit .env.local and configure:
+# VITE_STOCK_API_PROVIDER=upstash
+# VITE_ALPHA_VANTAGE_KEY=your_alpha_vantage_key
+# UPSTASH_REDIS_REST_URL=your_upstash_url
+# UPSTASH_REDIS_REST_TOKEN=your_upstash_token
 
 # Build and preview (works on any Node version)
 npm run build
@@ -104,36 +105,37 @@ Example: `http://localhost:3008?symbol=AAPL&theme=dark`
 
 ## 🔑 Stock API Setup
 
-### Finnhub (Recommended - FREE)
+### Upstash Redis + Alpha Vantage (Recommended)
 
-**Best choice for production:**
-- ✅ **60 API calls per minute** (~86,400/day)
-- ✅ **2,400x better** than Alpha Vantage free tier
-- ✅ Free forever with generous limits
+**Best choice for production - 99% API call reduction:**
+- ✅ **Server-side caching** with Upstash Redis
+- ✅ **100 visitors = 3 API calls** (vs 300 without caching)
+- ✅ **Free tier**: 10K commands/day (sufficient for stock widget)
+- ✅ **24-hour cache** duration for optimal API usage
 
 **Setup:**
-1. Get free API key: https://finnhub.io/register
-2. Add to `.env.local`:
+1. Get Upstash Redis: https://upstash.com/
+2. Get Alpha Vantage API key: https://www.alphavantage.co/support/#api-key
+3. Add to `.env.local`:
    ```bash
-   VITE_STOCK_API_PROVIDER=finnhub
-   VITE_FINNHUB_API_KEY=your_key_here
+   VITE_STOCK_API_PROVIDER=upstash
+   VITE_ALPHA_VANTAGE_KEY=your_alpha_vantage_key
+   UPSTASH_REDIS_REST_URL=your_upstash_redis_url
+   UPSTASH_REDIS_REST_TOKEN=your_upstash_redis_token
    ```
+4. Set same variables in Vercel Dashboard for production
 
-### Alpha Vantage (Legacy)
+### Alpha Vantage Direct (Fallback)
 
-**Limited free tier:**
-- ❌ Only 25 requests/day, 5 requests/minute
-- Use only if you already have an API key
+**Use only for local development without Redis:**
+- ⚠️ Limited: 25 requests/day, 5 requests/minute
+- Each browser has separate localStorage cache
 
 **Setup:**
-1. Get API key: https://www.alphavantage.co/support/#api-key
-2. Add to `.env.local`:
+1. Add to `.env.local`:
    ```bash
    VITE_STOCK_API_PROVIDER=alphavantage
    VITE_ALPHA_VANTAGE_KEY=your_key_here
-   # Optional: Enable comprehensive data (Market Cap, PE, PB, EPS, etc.)
-   # Reduces daily capacity from 12 to 8 page loads
-   VITE_ENABLE_OVERVIEW=false
    ```
 
 **API Optimization:**
@@ -142,13 +144,13 @@ Example: `http://localhost:3008?symbol=AAPL&theme=dark`
 - Fields requiring OVERVIEW: Market Cap, PE Ratio, PB Ratio, EPS, 52-week High/Low, Exchange
 - Basic fields always available: Price, Change, Volume, Open, High, Low
 
-See [docs/API_KEY_SETUP.md](docs/API_KEY_SETUP.md) for detailed setup instructions.
+See [docs/UPSTASH_SETUP.md](docs/UPSTASH_SETUP.md) and [docs/REDIS_TESTING_GUIDE.md](docs/REDIS_TESTING_GUIDE.md) for detailed setup instructions.
 
-### API Provider Comparison
+### API Provider & Caching
 
-- [Finnhub](https://finnhub.io/) - Free tier with real-time data
-- [IEX Cloud](https://iexcloud.io/) - Professional API
-- [Yahoo Finance (unofficial)](https://github.com/ranaroussi/yfinance)
+- [Alpha Vantage](https://www.alphavantage.co/) - Stock data API (Free tier: 25 calls/day)
+- [Upstash Redis](https://upstash.com/) - Server-side caching (Free tier: 10K commands/day)
+- [Vercel](https://vercel.com/) - Serverless functions for API routes
 
 ## 🏗️ Project Structure
 
@@ -314,6 +316,8 @@ Contributions welcome! Please:
 
 - [Deployment Guide](docs/DEPLOYMENT.md) - Deploy to Vercel
 - [WordPress Integration](docs/WORDPRESS_INTEGRATION.md) - Embed in WordPress
+- [Redis Setup Guide](docs/UPSTASH_SETUP.md) - Configure Upstash Redis caching
+- [Redis Testing Guide](docs/REDIS_TESTING_GUIDE.md) - Test and troubleshoot Redis
 - [Performance Optimizations](docs/PERFORMANCE_OPTIMIZATIONS.md) - Performance guide
 - [API Documentation](src/services/stockApi.js) - API service details
 

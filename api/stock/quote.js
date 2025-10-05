@@ -13,22 +13,6 @@ import axios from 'axios';
 import { getFromCache, saveToCache, getCacheTTL } from './utils/redis.js';
 
 /**
- * Fetch quote from Finnhub API
- */
-const fetchFromFinnhub = async (symbol) => {
-  const apiKey = process.env.VITE_FINNHUB_API_KEY;
-  if (!apiKey) {
-    throw new Error('Finnhub API key not configured');
-  }
-
-  const response = await axios.get('https://finnhub.io/api/v1/quote', {
-    params: { symbol, token: apiKey }
-  });
-
-  return response.data;
-};
-
-/**
  * Fetch quote from Alpha Vantage API
  */
 const fetchFromAlphaVantage = async (symbol) => {
@@ -74,7 +58,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Symbol parameter required' });
     }
 
-    const provider = process.env.VITE_STOCK_API_PROVIDER || 'finnhub';
+    const provider = 'alphavantage';
     const cacheKey = `stock:quote:${symbol}:${provider}`;
 
     // Try Redis cache first
@@ -90,13 +74,7 @@ export default async function handler(req, res) {
 
     // Cache miss - fetch from API
     console.log(`[API] Fetching quote for ${symbol} from ${provider}`);
-    let data;
-
-    if (provider.toLowerCase() === 'finnhub') {
-      data = await fetchFromFinnhub(symbol);
-    } else {
-      data = await fetchFromAlphaVantage(symbol);
-    }
+    const data = await fetchFromAlphaVantage(symbol);
 
     // Save to Redis cache
     const ttl = getCacheTTL();
