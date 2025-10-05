@@ -13,7 +13,7 @@ import axios from 'axios';
 import { getFromCache, saveToCache, getCacheTTL } from './utils/redis.js';
 
 /**
- * Fetch daily data from Alpha Vantage API
+ * Fetch daily data from Alpha Vantage API and normalize the response
  */
 const fetchFromAlphaVantage = async (symbol, outputsize = 'compact') => {
   const apiKey = process.env.VITE_ALPHA_VANTAGE_KEY;
@@ -30,7 +30,23 @@ const fetchFromAlphaVantage = async (symbol, outputsize = 'compact') => {
     }
   });
 
-  return response.data;
+  const timeSeries = response.data['Time Series (Daily)'];
+
+  if (!timeSeries) {
+    throw new Error('No daily data available - check symbol or API key');
+  }
+
+  // Transform to chart format (array of candles)
+  const candles = Object.entries(timeSeries).map(([date, values]) => ({
+    time: new Date(date).getTime() / 1000,
+    open: parseFloat(values['1. open']),
+    high: parseFloat(values['2. high']),
+    low: parseFloat(values['3. low']),
+    close: parseFloat(values['4. close']),
+    volume: parseInt(values['5. volume'])
+  })).reverse();
+
+  return candles;
 };
 
 /**

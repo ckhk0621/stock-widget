@@ -13,7 +13,37 @@ import axios from 'axios';
 import { getFromCache, saveToCache, getCacheTTL } from './utils/redis.js';
 
 /**
- * Fetch quote from Alpha Vantage API
+ * Fetch company overview data from Alpha Vantage
+ */
+const fetchOverview = async (symbol, apiKey) => {
+  const response = await axios.get('https://www.alphavantage.co/query', {
+    params: {
+      function: 'OVERVIEW',
+      symbol,
+      apikey: apiKey
+    }
+  });
+
+  const data = response.data;
+
+  if (!data || !data.Symbol) {
+    return null;
+  }
+
+  return {
+    marketCap: data.MarketCapitalization || 'N/A',
+    peRatio: data.PERatio || '-',
+    pbRatio: data.PriceToBookRatio || '-',
+    eps: data.EPS || '-',
+    sharesOutstanding: data.SharesOutstanding || '0',
+    week52High: data['52WeekHigh'] ? parseFloat(data['52WeekHigh']) : null,
+    week52Low: data['52WeekLow'] ? parseFloat(data['52WeekLow']) : null,
+    exchange: data.Exchange || 'N/A'
+  };
+};
+
+/**
+ * Fetch quote from Alpha Vantage API and normalize the response
  */
 const fetchFromAlphaVantage = async (symbol) => {
   const apiKey = process.env.VITE_ALPHA_VANTAGE_KEY;
@@ -29,7 +59,47 @@ const fetchFromAlphaVantage = async (symbol) => {
     }
   });
 
-  return response.data;
+  const quote = response.data['Global Quote'];
+
+  if (!quote || Object.keys(quote).length === 0) {
+    throw new Error('No quote data available - check symbol or API key');
+  }
+
+  // Check if OVERVIEW API call is enabled (additional API call)
+  const enableOverview = process.env.VITE_ENABLE_OVERVIEW === 'true';
+  let overview = null;
+
+  if (enableOverview) {
+    console.log('[API] OVERVIEW enabled - fetching comprehensive data (extra API call)');
+    try {
+      overview = await fetchOverview(symbol, apiKey);
+    } catch (error) {
+      console.warn('[API] Could not fetch overview data:', error.message);
+    }
+  }
+
+  // Normalize the data to match alphaVantageAdapter format
+  return {
+    symbol: quote['01. symbol'],
+    price: parseFloat(quote['05. price']),
+    change: parseFloat(quote['09. change']),
+    changePercent: quote['10. change percent'],
+    volume: parseInt(quote['06. volume']),
+    latestTradingDay: quote['07. latest trading day'],
+    previousClose: parseFloat(quote['08. previous close']),
+    open: parseFloat(quote['02. open']),
+    high: parseFloat(quote['03. high']),
+    low: parseFloat(quote['04. low']),
+    // Additional fields from overview (if available)
+    marketCap: overview?.marketCap || 'N/A',
+    peRatio: overview?.peRatio || '-',
+    pbRatio: overview?.pbRatio || '-',
+    eps: overview?.eps || '-',
+    sharesOutstanding: overview?.sharesOutstanding || '0',
+    week52High: overview?.week52High || null,
+    week52Low: overview?.week52Low || null,
+    exchange: overview?.exchange || 'N/A'
+  };
 };
 
 /**

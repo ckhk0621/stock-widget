@@ -13,7 +13,7 @@ import axios from 'axios';
 import { getFromCache, saveToCache, getCacheTTL } from './utils/redis.js';
 
 /**
- * Fetch intraday data from Alpha Vantage API
+ * Fetch intraday data from Alpha Vantage API and normalize the response
  */
 const fetchFromAlphaVantage = async (symbol, interval = '5min') => {
   const apiKey = process.env.VITE_ALPHA_VANTAGE_KEY;
@@ -26,11 +26,28 @@ const fetchFromAlphaVantage = async (symbol, interval = '5min') => {
       function: 'TIME_SERIES_INTRADAY',
       symbol,
       interval,
+      outputsize: 'compact',
       apikey: apiKey
     }
   });
 
-  return response.data;
+  const timeSeries = response.data[`Time Series (${interval})`];
+
+  if (!timeSeries) {
+    throw new Error('No intraday data available');
+  }
+
+  // Transform to chart format (array of candles)
+  const candles = Object.entries(timeSeries).map(([timestamp, values]) => ({
+    time: new Date(timestamp).getTime() / 1000,
+    open: parseFloat(values['1. open']),
+    high: parseFloat(values['2. high']),
+    low: parseFloat(values['3. low']),
+    close: parseFloat(values['4. close']),
+    volume: parseInt(values['5. volume'])
+  })).reverse();
+
+  return candles;
 };
 
 /**
