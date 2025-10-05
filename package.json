@@ -11,6 +11,7 @@
     "vercel-build": "vite build && node copy-static-files.js"
   },
   "dependencies": {
+    "@upstash/redis": "^1.35.4",
     "axios": "^1.12.2",
     "chart.js": "^4.5.0",
     "date-fns": "^4.1.0",

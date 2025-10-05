@@ -7,6 +7,7 @@
 
 import { createAlphaVantageAdapter } from './providers/alphaVantageAdapter.js';
 import { createFinnhubAdapter } from './providers/finnhubAdapter.js';
+import { createUpstashAdapter } from './providers/upstashAdapter.js';
 
 // Get configured provider from environment
 const PROVIDER = import.meta.env.VITE_STOCK_API_PROVIDER || 'finnhub';
@@ -93,6 +94,11 @@ const createProvider = () => {
 
     case 'finnhub':
       return createFinnhubAdapter();
+
+    case 'upstash':
+    case 'redis':
+      console.log('[API Adapter] Using Upstash Redis (server-side cache)');
+      return createUpstashAdapter();
 
     default:
       console.warn(`[API Adapter] Unknown provider "${PROVIDER}", falling back to Finnhub`);
