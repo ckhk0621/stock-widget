@@ -12,12 +12,15 @@ import { createFinnhubAdapter } from './providers/finnhubAdapter.js';
 const PROVIDER = import.meta.env.VITE_STOCK_API_PROVIDER || 'finnhub';
 
 // Cache configuration
-// 24 hours = 24 * 60 * 60 * 1000 ms
+// Development: 12 hours for testing with real data
+// Production: 24 hours for end users
 // With Alpha Vantage free tier (25 calls/day), 24-hour cache allows:
 // - 3 API calls per page load (quote, chart, historical)
 // - 25 calls/day ÷ 3 = ~8 unique page loads per day
 // - Subsequent visitors within 24h use cached data (0 API calls)
-const CACHE_DURATION = 86400000; // 24 hours
+const CACHE_DURATION = import.meta.env.DEV
+  ? 43200000   // 12 hours in development (12 * 60 * 60 * 1000)
+  : 86400000;  // 24 hours in production
 const CACHE_PREFIX = 'stock_widget_cache_';
 
 /**
