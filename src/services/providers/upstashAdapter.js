@@ -20,7 +20,15 @@ import axios from 'axios';
 
 // Detect API base URL
 const getApiBaseUrl = () => {
-  // Use current origin (works for both localhost and production)
+  // Use configured Vercel URL for API routes (they don't exist on WordPress domain)
+  // Falls back to current origin for local testing
+  const vercelUrl = import.meta.env.VITE_VERCEL_URL;
+
+  if (vercelUrl) {
+    return vercelUrl;
+  }
+
+  // Fallback to current origin for local development
   return window.location.origin;
 };
 
