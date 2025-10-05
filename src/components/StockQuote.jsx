@@ -28,6 +28,9 @@ const StockQuote = ({ quote, loading = false }) => {
   const isPositive = quote.change >= 0;
   const priceChangeClass = isPositive ? 'positive' : 'negative';
 
+  // Format changePercent to 2 decimal places (remove % sign and parse)
+  const changePercentValue = parseFloat(quote.changePercent.replace('%', ''));
+
   // Format large numbers with commas (e.g., 16,012,500)
   const formatNumber = (value) => {
     if (value === null || value === undefined || value === 'N/A' || value === '-' || value === '0') {
@@ -84,10 +87,10 @@ const StockQuote = ({ quote, loading = false }) => {
           <div className={`price-change ${priceChangeClass}`}>
             <span className="change-arrow">{isPositive ? '▲' : '▼'}</span>
             <span className="change-value">
-              {isPositive ? '+' : ''}${quote.change.toFixed(2)}
+              {isPositive ? '+' : ''}{quote.change.toFixed(2)}
             </span>
             <span className="change-percent">
-              ({quote.changePercent})
+              ({changePercentValue.toFixed(2)}%)
             </span>
           </div>
         </div>
@@ -101,7 +104,7 @@ const StockQuote = ({ quote, loading = false }) => {
           <div className="detail-item">
             <span className="detail-label">$Chg</span>
             <span className={`detail-value ${priceChangeClass}`}>
-              {isPositive ? '▲' : '▼'} ${Math.abs(quote.change).toFixed(2)}
+              {isPositive ? '▲' : '▼'} {Math.abs(quote.change).toFixed(2)}
             </span>
           </div>
           <div className="detail-item">
@@ -122,7 +125,7 @@ const StockQuote = ({ quote, loading = false }) => {
           </div>
           <div className="detail-item">
             <span className="detail-label">% Chg</span>
-            <span className={`detail-value ${priceChangeClass}`}>{quote.changePercent}</span>
+            <span className={`detail-value ${priceChangeClass}`}>{changePercentValue.toFixed(2)}%</span>
           </div>
           <div className="detail-item">
             <span className="detail-label">Prev. Close</span>
