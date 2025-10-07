@@ -106,18 +106,24 @@ export const deleteFromCache = async (key) => {
  * Alpha Vantage Limits:
  * - 25 API calls per day
  * - 5 API calls per minute
+ * - FREE TIER: End-of-day data only (updates ~4:30 PM ET)
  *
  * Widget makes 3 API calls per symbol (quote, intraday, daily)
  *
- * TTL Strategy (4 hours):
- * - 6 cache refreshes per day (24h ÷ 4h)
- * - 18 API calls per day (6 × 3 calls)
- * - 72% quota utilization
- * - 7-call safety buffer for errors/retries
+ * TTL Strategy (24 hours):
+ * - 1 cache refresh per day (24h ÷ 24h)
+ * - 3 API calls per day (1 × 3 calls)
+ * - 12% quota utilization
+ * - 22-call safety buffer for errors/retries/other symbols
  *
- * Refresh times: 12AM, 4AM, 8AM, 12PM, 4PM, 8PM
- * Covers: Pre-market, market open, market close, after-hours
+ * Rationale:
+ * - Free tier data updates ONCE per day (end-of-day only)
+ * - No benefit to refreshing cache more frequently
+ * - Aligns cache expiration with Alpha Vantage data update schedule
+ * - Maximizes API quota efficiency (83% reduction vs 4-hour TTL)
+ *
+ * Refresh time: Once daily after 4:30 PM ET market data update
  */
 export const getCacheTTL = () => {
-  return 14400; // 4 hours (in seconds)
+  return 86400; // 24 hours (in seconds)
 };
