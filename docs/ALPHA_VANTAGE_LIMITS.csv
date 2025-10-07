@@ -1,0 +1,28 @@
+Limit Type,Metric,Free Tier,Basic ($49.99),Standard ($99.99),Professional ($149.99),Business ($199.99),Enterprise ($249.99),Custom Plan,Impact on Usage
+Rate Limits,Requests Per Minute,5,75,150,300,600,"1,200",Unlimited,How many API calls per minute
+Rate Limits,Requests Per Day,25,Unlimited,Unlimited,Unlimited,Unlimited,Unlimited,Unlimited,Daily API call quota
+Rate Limits,Requests Per Hour (calculated),300 max (but capped at 25/day),4500,"9,000","18,000","36,000","72,000",Unlimited,Theoretical hourly capacity
+Rate Limits,Estimated Monthly Requests,750 (25/day × 30),Unlimited,Unlimited,Unlimited,Unlimited,Unlimited,Unlimited,Monthly usage capacity
+Batch Queries,Symbols Per Analytics Request,5,50,50,50,50,50,50+,ANALYTICS_FIXED_WINDOW function
+Batch Queries,Symbols Per Bulk Quote,100 (delayed),100 (real-time),100 (real-time),100 (real-time),100 (real-time),100 (real-time),100+ (real-time),REALTIME_BULK_QUOTES function
+Batch Queries,Metrics Per Analytics Request,1,Multiple,Multiple,Multiple,Multiple,Multiple,Multiple,How many calculations simultaneously
+Data Volume,Historical Data Depth,20+ years,20+ years,20+ years,20+ years,20+ years,20+ years,20+ years,Years of historical data available
+Data Volume,Intraday Data History,20+ years (delayed),20+ years (real-time),20+ years (real-time),20+ years (real-time),20+ years (real-time),20+ years (real-time),20+ years (real-time),Historical intraday data
+API Endpoints,Total Endpoints Available,100+,100+,100+,100+,100+,100+,100+,Number of API functions
+API Endpoints,Premium-Only Endpoints,Limited,Full access,Full access,Full access,Full access,Full access,Full access,Access to premium functions
+Concurrent Connections,Simultaneous API Calls,Limited by rate,Limited by rate,Limited by rate,Limited by rate,Limited by rate,Limited by rate,Custom,Parallel request capability
+Data Output,Output Formats,JSON/CSV,JSON/CSV,JSON/CSV,JSON/CSV,JSON/CSV,JSON/CSV,JSON/CSV,Data format options
+Response Time,Typical API Response,<1 second,<1 second,<1 second,<1 second,<1 second,<1 second,<1 second,API call latency
+Data Freshness,Stock Quote Updates,End-of-day,Real-time/15-min,Real-time/15-min,Real-time/15-min,Real-time/15-min,Real-time/15-min,Real-time/15-min,How current the data is
+Data Freshness,Fundamental Data Updates,Same-day,Same-day,Same-day,Same-day,Same-day,Same-day,Same-day,Earnings/financials refresh
+Data Freshness,News Feed Updates,Real-time,Real-time,Real-time,Real-time,Real-time,Real-time,Real-time,News & sentiment freshness
+Support Response,Email Response Time,Best effort,Priority,Priority,Priority,Priority,Priority,Dedicated,Support ticket response
+Support Response,Issue Resolution SLA,No guarantee,Business hours,Business hours,Business hours,24/7,24/7,Custom SLA,Guaranteed resolution time
+IP Restrictions,IP-Based Rate Limiting,Yes (5/min),Yes (higher),Yes (higher),Yes (higher),Yes (higher),Yes (higher),Configurable,Per-IP request throttling
+Geographic Access,Data Coverage,Global,Global,Global,Global,Global,Global,Global,Market coverage worldwide
+API Key Management,Keys Per Account,1,1,1,1,1,1,Multiple,Number of API keys allowed
+Usage Tracking,Usage Analytics,Basic,Enhanced,Enhanced,Enhanced,Enhanced,Enhanced,Custom dashboard,API usage monitoring
+Compliance,Data Licensing,End-of-day only,Full licensing,Full licensing,Full licensing,Full licensing,Full licensing,Full licensing,Exchange-approved data access
+Compliance,Nasdaq Licensed Data,❌ No,✅ Yes,✅ Yes,✅ Yes,✅ Yes,✅ Yes,✅ Yes,Official Nasdaq data provider
+Platform Features,Alpha X Terminal Access,❌ No,✅ Yes,✅ Yes,✅ Yes,✅ Yes,✅ Yes,✅ Yes,Visualization platform access
+Platform Features,Data Entitlement Management,❌ No,✅ Yes,✅ Yes,✅ Yes,✅ Yes,✅ Yes,✅ Yes,Manage real-time data access

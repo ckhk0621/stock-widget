@@ -1,0 +1,46 @@
+Feature Category,Specific Feature,Free Tier,Premium Tiers,Premium Requirement,Access Method
+Data Access - Stock,Historical Stock Data (20+ years),✅ Yes,✅ Yes,No,API endpoint
+Data Access - Stock,Daily Stock Quotes,✅ Yes,✅ Yes,No,API endpoint
+Data Access - Stock,Intraday Stock Data (End-of-Day),✅ Yes,✅ Yes,No,API endpoint
+Data Access - Stock,Real-time Stock Quotes,❌ No,✅ Yes,Premium + Alpha X Terminal,Alpha X Terminal entitlement
+Data Access - Stock,15-Minute Delayed Quotes,❌ No,✅ Yes,Premium + Alpha X Terminal,Alpha X Terminal entitlement
+Data Access - Stock,Extended Hours Data (Real-time),❌ No,✅ Yes,Premium + Alpha X Terminal,Alpha X Terminal entitlement
+Data Access - Options,Real-time Options Data,❌ No,✅ Yes,Premium + Alpha X Terminal,Alpha X Terminal entitlement
+Data Access - Options,Options Chains,❌ No,✅ Yes,Premium + Alpha X Terminal,Alpha X Terminal entitlement
+Data Access - Fundamental,Company Overview,✅ Yes,✅ Yes,No,API endpoint
+Data Access - Fundamental,Income Statement,✅ Yes,✅ Yes,No,API endpoint
+Data Access - Fundamental,Balance Sheet,✅ Yes,✅ Yes,No,API endpoint
+Data Access - Fundamental,Cash Flow,✅ Yes,✅ Yes,No,API endpoint
+Data Access - Fundamental,Earnings Data,✅ Yes,✅ Yes,No,API endpoint
+Data Access - Fundamental,Earnings Call Transcripts (with AI sentiment),✅ Yes,✅ Yes,No,API endpoint
+Data Access - Market Intelligence,News & Sentiment API,✅ Yes,✅ Yes,No,API endpoint
+Data Access - Market Intelligence,Top Gainers/Losers (Real-time),❌ No,✅ Yes,Premium,API endpoint
+Data Access - Market Intelligence,Top Gainers/Losers (End-of-Day),✅ Yes,✅ Yes,No,API endpoint
+Data Access - Forex,Currency Exchange Rates,✅ Yes,✅ Yes,No,API endpoint
+Data Access - Forex,Forex Intraday Data,✅ Yes (delayed),✅ Yes (real-time option),Premium for real-time,API endpoint
+Data Access - Crypto,Cryptocurrency Data,✅ Yes (delayed),✅ Yes (real-time option),Premium for real-time,API endpoint
+Data Access - Crypto,Crypto Ratings (FCAS),✅ Yes,✅ Yes,No,API endpoint
+Data Access - Economic,Economic Indicators,✅ Yes,✅ Yes,No,API endpoint
+Data Access - Commodities,Commodity Prices,✅ Yes,✅ Yes,No,API endpoint
+Technical Indicators,50+ Technical Indicators,✅ Yes,✅ Yes,No,API endpoint
+Technical Indicators,VWAP (Volume Weighted Average Price),✅ Yes,✅ Yes,No,API endpoint
+API Capabilities,Batch Symbol Queries,⚠️ Up to 5 symbols,✅ Up to 50 symbols,Premium,API parameter
+API Capabilities,Bulk Quotes (REALTIME_BULK_QUOTES),⚠️ Up to 100 symbols (delayed),✅ Up to 100 symbols (real-time),Premium for real-time,API endpoint
+API Capabilities,Analytics Fixed Window,⚠️ 5 symbols max,✅ 50 symbols max,Premium,API endpoint
+API Capabilities,Multiple Metrics Per Request,⚠️ 1 metric,✅ Multiple metrics,Premium,API parameter
+Platform Access,Alpha X Terminal Access,❌ No,✅ Yes,Premium,Web portal
+Platform Access,Data Entitlement Portal,❌ No,✅ Yes,Premium,Alpha X Terminal
+Platform Access,Visualization Tools,❌ No,✅ Yes,Premium,Alpha X Terminal
+Support,Documentation Access,✅ Yes,✅ Yes,No,Website
+Support,Community Forums,✅ Yes,✅ Yes,No,Online forums
+Support,Email Support,⚠️ Limited,✅ Premium support,Premium,Email
+Support,Response Time,Best effort,Priority,Premium,N/A
+Support,Technical Assistance,Self-service,Dedicated team,Premium,Email/Portal
+Support,24/7 Support,❌ No,✅ Yes,Premium,Email
+Rate Limits,Requests Per Minute,5,75-1200 (tier dependent),Premium,Automatic
+Rate Limits,Requests Per Day,25,Unlimited,Premium,Automatic
+Rate Limits,IP Throttling,Yes (5 req/min),Yes (higher limits),Premium,Automatic
+Contract Terms,Cancellation Policy,N/A,Cancel anytime,Premium,Portal
+Contract Terms,Hidden Costs,No,No,Premium,N/A
+Contract Terms,Overage Charges,No,No,Premium,N/A
+Contract Terms,Contract Length,Lifetime free,Monthly or Annual,Premium,Subscription choice

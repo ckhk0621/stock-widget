@@ -1,0 +1,12 @@
+Data Type,Free Tier,Premium Tiers,Delay Time (Free),Delay Time (Premium),Update Frequency (Free),Update Frequency (Premium),Notes
+Stock Quotes - Intraday,End-of-day only,Real-time OR 15-min delayed,Until 4:30 PM ET next day,0 min (real-time) or 15 min,Once daily (~4:30 PM ET),Real-time or every 15 min,Premium requires data entitlement via Alpha X Terminal
+Stock Quotes - Daily,Available,Available,End-of-day,End-of-day,Once daily,Once daily,Both tiers receive end-of-day data
+Top Gainers/Losers,End-of-day only,Real-time OR 15-min delayed,Until 4:30 PM ET next day,0 min (real-time) or 15 min,Once daily,Real-time or every 15 min,Premium provides intraday updates
+Historical Data,20+ years available,20+ years available,N/A,N/A,Static historical,Static historical,Both tiers have same historical depth
+Options Data,Not available,Real-time available,N/A,0 min (real-time),N/A,Real-time,Premium-only feature
+Extended Hours Trading,End-of-day only,Real-time OR 15-min delayed,Until 4:30 PM ET next day,0 min (real-time) or 15 min,Once daily,Real-time or every 15 min,Pre-market (4am-9:30am) & after-hours (4pm-8pm ET)
+Fundamental Data,Available (same-day refresh),Available (same-day refresh),End-of-day,End-of-day,When company reports,When company reports,Both tiers updated same day as earnings
+Economic Indicators,Available,Available,Per IMF/FRED schedule,Per IMF/FRED schedule,Monthly/Quarterly,Monthly/Quarterly,Same for both tiers
+Forex Data,Available,Available,End-of-day,Real-time option available,Once daily,Real-time or delayed,Premium can access real-time forex
+Crypto Data,Available,Available,End-of-day,Real-time option available,Once daily,Real-time or delayed,Premium can access real-time crypto
+News & Sentiment,Available,Available,Real-time,Real-time,Continuous,Continuous,Both tiers receive live news feeds

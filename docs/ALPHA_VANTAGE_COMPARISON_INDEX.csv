@@ -1,0 +1,47 @@
+File Name,Purpose,Key Comparisons,Best Used For,Row Count
+ALPHA_VANTAGE_PRICING.csv,Pricing comparison across all tiers,"Monthly vs Annual pricing, Cost per request, Requests/min limits","Understanding total cost of ownership, ROI analysis",7 tiers
+ALPHA_VANTAGE_DATA_TIMING.csv,Data delay and refresh frequency comparison,"End-of-day vs Real-time vs 15-min delayed, Update frequencies","Determining if real-time data is needed, Understanding data freshness",11 data types
+ALPHA_VANTAGE_FEATURES.csv,Detailed feature availability matrix,"Free vs Premium features, Access requirements, 60+ features compared","Feature gap analysis, Identifying premium-only capabilities",60+ features
+ALPHA_VANTAGE_LIMITS.csv,API limits and quotas comparison,"Rate limits, Batch query limits, Data volume limits","Capacity planning, Understanding technical constraints",20+ limit types
+
+Summary - Key Differences
+Category,Free Tier,Premium Tiers,Primary Benefit of Premium
+Pricing,$0/month,$49.99-$249.99/month,Unlimited daily requests
+Rate Limits,25 requests/day | 5 req/min,Unlimited daily | 75-1200 req/min,Production-scale API access
+Data Timing,End-of-day only (updates ~4:30 PM ET),Real-time OR 15-min delayed,Current market data during trading hours
+Premium Data,❌ No real-time quotes | ❌ No options data,✅ Real-time quotes | ✅ Options data,Live market data access
+Batch Queries,5 symbols per request,50 symbols per request,10x more efficient bulk operations
+Support,Community + Self-service,Premium email + 24/7 support,Dedicated technical assistance
+Alpha X Terminal,❌ Not available,✅ Full access,Data visualization & entitlement portal
+Best For,Personal projects & testing,Production apps & professional use,Scalable commercial applications
+
+Quick Decision Guide
+Your Need,Recommended Tier,Monthly Cost,Key Reason
+Learning & testing,Free,$0,No cost for exploration
+Personal portfolio tracker (<25 calls/day),Free,$0,Sufficient for low-frequency personal use
+Small production app,Basic Premium,$49.99,Unlimited daily requests
+Growing SaaS application,Standard Premium,$99.99,150 req/min for moderate traffic
+High-frequency trading dashboard,Professional Premium,$149.99,300 req/min capacity
+Large brokerage platform,Business/Enterprise Premium,$199.99-$249.99,600-1200 req/min for scale
+Need real-time data,Any Premium tier,$49.99+,Real-time data requires premium
+Need options data,Any Premium tier,$49.99+,Options data is premium-only
+
+Critical Premium-Only Features
+Feature,Free Tier Access,Premium Requirement,Why It Matters
+Real-time stock quotes,❌ No (end-of-day only),✅ Yes + Alpha X Terminal,Live market data during trading hours
+15-minute delayed quotes,❌ No,✅ Yes + Alpha X Terminal,Near-live data alternative
+Real-time options data,❌ Not available,✅ Yes + Alpha X Terminal,Options trading requires current data
+Extended hours trading data (real-time),❌ No,✅ Yes,Pre-market & after-hours market activity
+Batch queries (50 symbols),❌ No (5 symbols max),✅ Yes,Efficient multi-symbol analysis
+Unlimited daily requests,❌ No (25/day cap),✅ Yes,Production app scalability
+Premium email support,❌ No (community only),✅ Yes,Dedicated technical help
+Alpha X Terminal access,❌ No,✅ Yes,Data visualization & entitlement management
+
+Data Delay Summary
+Data Type,Free Tier Delay,Premium Tier Delay,Time Difference
+Stock quotes during market hours,Until next day ~4:30 PM ET,0 minutes (real-time) or 15 min,Up to 24 hours fresher
+Top gainers/losers,Until next day ~4:30 PM ET,0 minutes (real-time) or 15 min,Intraday vs end-of-day
+Extended hours trading,Until next day ~4:30 PM ET,0 minutes (real-time),Real-time pre/post market data
+Historical data,Same for both,Same for both,No difference
+Fundamental data (earnings),Same-day refresh for both,Same-day refresh for both,No difference
+News & sentiment,Real-time for both,Real-time for both,No difference
