@@ -58,6 +58,13 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
+  // Prevent browser/CDN caching - Redis is the ONLY cache layer
+  // Without these headers, browsers use "heuristic caching" and cache responses
+  // even after clearing Redis, causing stale data to persist
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache'); // HTTP/1.0 compatibility
+  res.setHeader('Expires', '0'); // Prevent proxy caching
+
   // Handle OPTIONS preflight
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
