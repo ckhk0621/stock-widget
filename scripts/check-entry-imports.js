@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-/* global process */
 
 /**
  * Post-build guard: no chunk may import the entry file (stock-widget.js).

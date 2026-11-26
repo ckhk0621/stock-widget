@@ -26,4 +26,11 @@ export default defineConfig([
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
     },
   },
+  {
+    // Serverless routes and build scripts run on Node, not in the browser
+    files: ['api/**/*.js', 'scripts/**/*.js', 'copy-static-files.js'],
+    languageOptions: {
+      globals: globals.node,
+    },
+  },
 ])
