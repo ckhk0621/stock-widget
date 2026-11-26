@@ -51,3 +51,46 @@ export const formatVolumeTick = (value) => {
   }
   return `${value}`;
 };
+
+// Splits that Alpha Vantage's free TIME_SERIES_DAILY does not adjust for
+// (TIME_SERIES_DAILY_ADJUSTED is premium). ratio = new shares per old share.
+// AXNX: 2-for-5 reverse split effective 2026-10-22 (6-K filed 2026-10-20).
+const SPLITS = {
+  AXNX: [{ date: '2026-10-22', ratio: 2 / 5 }]
+};
+
+const isoDateToUnixSeconds = (iso) => {
+  const [y, m, d] = iso.split('-').map(Number);
+  return Date.UTC(y, m - 1, d) / 1000;
+};
+
+/**
+ * Back-adjust candles dated before each recorded split so the series is continuous.
+ * Returns new objects; the input may be a shared cache entry and is not mutated.
+ */
+export const applySplitAdjustments = (symbol, candles) => {
+  const splits = SPLITS[symbol];
+  if (!splits || !Array.isArray(candles)) {
+    return candles;
+  }
+
+  return candles.map((candle) => {
+    let factor = 1;
+    for (const split of splits) {
+      if (candle.time < isoDateToUnixSeconds(split.date)) {
+        factor *= split.ratio;
+      }
+    }
+    if (factor === 1) {
+      return candle;
+    }
+    return {
+      ...candle,
+      open: candle.open / factor,
+      high: candle.high / factor,
+      low: candle.low / factor,
+      close: candle.close / factor,
+      volume: Math.round(candle.volume * factor)
+    };
+  });
+};

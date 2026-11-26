@@ -5,6 +5,7 @@
  * Supports switching between providers via environment configuration.
  */
 
+import { applySplitAdjustments } from '../utils/stockConfig.js';
 import { createAlphaVantageAdapter } from './providers/alphaVantageAdapter.js';
 import { createUpstashAdapter } from './providers/upstashAdapter.js';
 
@@ -202,7 +203,7 @@ export const getStockData = async (symbol, period = '1M') => {
   };
 
   const cutoff = now - periodSeconds[period];
-  return data.filter(item => item.time >= cutoff);
+  return applySplitAdjustments(symbol, data.filter(item => item.time >= cutoff));
 };
 
 /**
