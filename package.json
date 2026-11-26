@@ -5,11 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && node copy-static-files.js",
+    "build": "vite build && node copy-static-files.js && node scripts/check-entry-imports.js",
     "lint": "eslint .",
     "test": "node --test 'tests/unit/*.test.js'",
     "preview": "vite preview",
-    "vercel-build": "vite build && node copy-static-files.js"
+    "vercel-build": "vite build && node copy-static-files.js && node scripts/check-entry-imports.js"
   },
   "dependencies": {
     "@upstash/redis": "^1.35.4",

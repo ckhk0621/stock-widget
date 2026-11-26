@@ -1,12 +1,14 @@
-import { useState, useEffect, lazy, Suspense } from 'react';
+import { useState, useEffect } from 'react';
 import StockQuote from './StockQuote';
 import HistoricalData from './HistoricalData';
+import StockChart from './StockChart';
 import { DEFAULT_SYMBOL } from '../utils/stockConfig';
 import { getStockQuote, getStockData, getMockQuote, getMockStockData } from '../services/stockApi';
 import './StockWidget.css';
 
-// Lazy load the chart component (reduces initial bundle size)
-const StockChart = lazy(() => import('./StockChart'));
+// StockChart is imported statically on purpose: a lazy chunk that shares code with the
+// entry imports "./stock-widget.js" without the embed's ?v= query, which makes the
+// browser run the entry twice (see scripts/check-entry-imports.js).
 
 const StockWidget = ({ symbol = DEFAULT_SYMBOL, useMock = false, theme = 'light' }) => {
   const [quote, setQuote] = useState(null);
@@ -111,21 +113,13 @@ const StockWidget = ({ symbol = DEFAULT_SYMBOL, useMock = false, theme = 'light'
         {/* Pass pre-fetched data to child components */}
         <StockQuote symbol={symbol} quote={quote} loading={false} />
 
-        {/* Lazy load chart component with suspense fallback */}
-        <Suspense fallback={
-          <div className="stock-chart loading">
-            <div className="loading-spinner"></div>
-            <p>Loading chart...</p>
-          </div>
-        }>
-          <StockChart
-            symbol={symbol}
-            dailyData={dailyData}
-            loading={chartLoading}
-            selectedPeriod={selectedPeriod}
-            onPeriodChange={setSelectedPeriod}
-          />
-        </Suspense>
+        <StockChart
+          symbol={symbol}
+          dailyData={dailyData}
+          loading={chartLoading}
+          selectedPeriod={selectedPeriod}
+          onPeriodChange={setSelectedPeriod}
+        />
 
         <HistoricalData symbol={symbol} dailyData={dailyData} loading={false} />
       </div>
