@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -13,6 +13,7 @@ import {
 } from 'chart.js';
 import { Line, Bar } from 'react-chartjs-2';
 import { format } from 'date-fns';
+import { AVAILABLE_PERIODS, formatPriceTick, formatVolumeTick } from '../utils/stockConfig';
 import './StockChart.css';
 
 // Register Chart.js components
@@ -27,8 +28,6 @@ ChartJS.register(
   Filler,
   Legend
 );
-
-const PERIODS = ['10D', '1M', '3M', '6M', '1Y', '5Y', 'ALL'];
 
 const StockChart = ({ symbol, dailyData, loading = false, selectedPeriod = '1M', onPeriodChange }) => {
   const [chartData, setChartData] = useState(null);
@@ -162,7 +161,7 @@ const StockChart = ({ symbol, dailyData, loading = false, selectedPeriod = '1M',
         },
         ticks: {
           callback: function(value) {
-            return '$' + value.toFixed(0);
+            return formatPriceTick(value);
           },
           font: {
             size: 11
@@ -213,7 +212,7 @@ const StockChart = ({ symbol, dailyData, loading = false, selectedPeriod = '1M',
         },
         ticks: {
           callback: function(value) {
-            return (value / 1000000).toFixed(1) + 'M';
+            return formatVolumeTick(value);
           },
           font: {
             size: 10
@@ -228,7 +227,7 @@ const StockChart = ({ symbol, dailyData, loading = false, selectedPeriod = '1M',
       <div className="chart-header">
         <h2 className='symbol'>{symbol} (STOCK CHART)</h2>
         <div className="period-selector">
-          {PERIODS.map(period => (
+          {AVAILABLE_PERIODS.map(period => (
             <button
               key={period}
               className={`period-btn ${selectedPeriod === period ? 'active' : ''}`}

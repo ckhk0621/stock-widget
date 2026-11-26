@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import './HistoricalData.css';
 
-const HistoricalData = ({ dailyData, loading = false }) => {
+const HistoricalData = ({ symbol, dailyData, loading = false }) => {
   // Component now receives pre-fetched data from parent (StockWidget)
   // This eliminates redundant API calls
 
@@ -77,7 +77,7 @@ const HistoricalData = ({ dailyData, loading = false }) => {
 
   return (
     <div className="historical-data">
-      <h2 className='symbol'>MIMI (HISTORICAL) (Last 30 Days)</h2>
+      <h2 className='symbol'>{symbol} (HISTORICAL) (Last 30 Days)</h2>
 
       <div className="table-container">
         <table>

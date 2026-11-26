@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 import StockWidget from './components/StockWidget.jsx'
+import { resolveSymbol } from './utils/stockConfig.js'
 
 // Render widget to container
 function renderWidget(container) {
@@ -12,7 +13,8 @@ function renderWidget(container) {
   const urlParams = new URLSearchParams(window.location.search);
   const mockFromUrl = urlParams.get('mock') === 'true';
 
-  const symbol = config.symbol || 'MIMI';
+  // resolveSymbol maps the retired MIMI ticker, so existing WordPress configs keep working
+  const symbol = resolveSymbol(config.symbol);
   // Priority: URL parameter > config object > default (false)
   const useMock = mockFromUrl || (config.useMock !== undefined ? config.useMock : false);
   const theme = config.theme || 'light';

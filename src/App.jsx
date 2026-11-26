@@ -1,10 +1,11 @@
 import StockWidget from './components/StockWidget';
+import { resolveSymbol } from './utils/stockConfig';
 import './App.css';
 
 function App() {
   // Get symbol from URL params or use default
   const urlParams = new URLSearchParams(window.location.search);
-  const symbol = urlParams.get('symbol') || 'MIMI';
+  const symbol = resolveSymbol(urlParams.get('symbol'));
   const useMock = urlParams.get('mock') === 'true';
   const theme = urlParams.get('theme') || 'light';
 

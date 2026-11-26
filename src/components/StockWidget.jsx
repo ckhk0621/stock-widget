@@ -1,13 +1,14 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
 import StockQuote from './StockQuote';
 import HistoricalData from './HistoricalData';
+import { DEFAULT_SYMBOL } from '../utils/stockConfig';
 import { getStockQuote, getStockData, getMockQuote, getMockStockData } from '../services/stockApi';
 import './StockWidget.css';
 
 // Lazy load the chart component (reduces initial bundle size)
 const StockChart = lazy(() => import('./StockChart'));
 
-const StockWidget = ({ symbol = 'MIMI', useMock = false, theme = 'light' }) => {
+const StockWidget = ({ symbol = DEFAULT_SYMBOL, useMock = false, theme = 'light' }) => {
   const [quote, setQuote] = useState(null);
   const [dailyData, setDailyData] = useState(null);
   const [selectedPeriod, setSelectedPeriod] = useState('1M');

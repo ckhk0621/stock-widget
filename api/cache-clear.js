@@ -1,7 +1,7 @@
 /**
  * Vercel Serverless Function: Clear Redis Cache
  *
- * GET /api/cache-clear?symbol=MIMI&provider=alphavantage
+ * GET /api/cache-clear?symbol=AXNX&provider=alphavantage
  *
  * Quick utility to clear stale Redis cache entries.
  * Useful after API format changes or data structure updates.

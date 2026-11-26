@@ -73,7 +73,7 @@ Add this code to your WordPress page/post (Custom HTML block):
 <div id="stock-widget"></div>
 <script>
   window.stockWidgetConfig = {
-    symbol: 'MIMI',
+    symbol: 'AXNX',
     useMock: false,
     theme: 'light'
   };
@@ -90,7 +90,7 @@ See [docs/WORDPRESS_INTEGRATION.md](docs/WORDPRESS_INTEGRATION.md) for detailed 
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `symbol` | string | 'MIMI' | Stock ticker symbol |
+| `symbol` | string | 'AXNX' | Stock ticker symbol |
 | `useMock` | boolean | false | Use mock data (testing) |
 | `theme` | string | 'light' | Theme: 'light' or 'dark' |
 
