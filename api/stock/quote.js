@@ -46,9 +46,8 @@ const fetchOverview = async (symbol, apiKey) => {
  * Fetch quote from Alpha Vantage API and normalize the response
  */
 const fetchFromAlphaVantage = async (symbol) => {
-  // Server-only name (no VITE_ prefix, so Vite never bundles it into the client).
-  // VITE_ fallback is temporary while the Vercel env var is renamed.
-  const apiKey = process.env.ALPHA_VANTAGE_KEY || process.env.VITE_ALPHA_VANTAGE_KEY;
+  // Server-only name: no VITE_ prefix, so Vite never bundles it into the client
+  const apiKey = process.env.ALPHA_VANTAGE_KEY;
   if (!apiKey) {
     throw new Error('Alpha Vantage API key not configured');
   }
