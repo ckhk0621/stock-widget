@@ -10,8 +10,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Transparent so the embed sits on the host page background (standalone .app sets its own) */
 .theme-light {
-  background-color: #f7f8fa;
+  background-color: transparent;
   color: #1a1a1a;
 }
 
