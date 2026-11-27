@@ -4,7 +4,7 @@
 
 ## 而家企喺邊
 - 目標：客戶 IR 頁嘅 widget 顯示 AXNX（前 MIMI）正確股價；報價嗰批修正已經全部交付，live site 驗證過。
-- Production 跟 `origin/main` 自動 deploy（Vercel，push 後約 1 分鐘）。冇工作在途。
+- Production 跟 `origin/main` 自動 deploy（Vercel，push 後約 1 分鐘）。冇工作在途。2026-11-27 prod smoke test 過咗 `3f00a98`：server key（`source: api`）、AXNX cache、bundle 冇真 key、live 頁 render 正常。Smoke test 一律用 AXNX，唔好用 MIMI（server 冇 cache，會燒 quota）。
 - Live embed 仍然傳 `symbol: 'MIMI'`，靠 `src/utils/stockConfig.js` 個 alias 轉 AXNX —— 唔好拆。
 - `stock-widget.js`／`.css` cache 5 分鐘（`vercel.json`），deploy 後唔使再改 embed 嘅 `?v=`。
 - 檢查：`pnpm test`（node:test）、`pnpm lint`（0 error）、`pnpm build`（尾段 `scripts/check-entry-imports.js` 擋住「chunk import 主程式」→ load 兩次）。
